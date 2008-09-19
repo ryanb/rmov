@@ -1,5 +1,17 @@
-=RQuicktime
+RMov
 
-Ruby wrapper for the Quicktime C API.
+Ruby wrapper for the QuickTime C API.
 
-Docs coming soon.
+This is still in very early development. If you want to try it out, you'll need to run a few commands.
+
+  cd ext
+  ruby extconf.rb
+  make
+
+That will generate an "rmov.bundle". You can "require" just like any Ruby file.
+
+  require 'rmov'
+  movie = Quicktime::Movie.new('foo.mov')
+  movie.duration # returns number of seconds of movie
+
+More features coming soon.
