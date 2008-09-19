@@ -1,0 +1,21 @@
+Fixes
+- better error handling when opening a movie from file
+- check if movie/track really exists each time we call it
+- separate out Movie and Track extensions into separate files
+- ensure no memory leaks
+- ensure track is allocated and freed properly
+
+Features
+- frame rate and frame count for movie and track
+- separate out Movie.new from Movie.open
+
+Possible
+- pointer to movie stream for playing movie through an interface
+- make a movie given pictures
+- add text to movie
+- add chapters to movie
+- save movie after modifying
+- exporting PICT from movie frame
+- ability to add and remove tracks
+- cursor position
+- converting movies from one to another
