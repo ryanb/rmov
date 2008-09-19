@@ -21,5 +21,9 @@ describe Quicktime::Movie do
     it "height should be 50" do
       @movie.height.should == 50
     end
+    
+    it "should have 1 track" do
+      @movie.tracks.map { |t| t.class }.should == [Quicktime::Track]
+    end
   end
 end
