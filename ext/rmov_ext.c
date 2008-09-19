@@ -37,7 +37,7 @@ static VALUE movie_new(VALUE klass)
   return Data_Make_Struct(klass, struct RMovie, movie_mark, movie_free, rMovie);
 }
 
-static VALUE movie_init(VALUE obj, VALUE filepath)
+static VALUE movie_load(VALUE obj, VALUE filepath)
 {
   OSErr err;
   FSSpec fs;
@@ -51,7 +51,7 @@ static VALUE movie_init(VALUE obj, VALUE filepath)
   err = NewMovieFromFile(movie, frefnum, &movie_resid, 0, newMovieActive, 0);
   RMOVIE(obj)->movie = movie;
   
-  return Qnil;
+  return obj;
 }
 
 static VALUE movie_raw_duration(VALUE obj)
@@ -122,7 +122,7 @@ void Init_rmov_ext()
   mQuicktime = rb_define_module("Quicktime");
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
   rb_define_alloc_func(cMovie, movie_new);
-  rb_define_method(cMovie, "initialize", movie_init, 1);
+  rb_define_method(cMovie, "load_from_file", movie_load, 1);
   rb_define_method(cMovie, "raw_duration", movie_raw_duration, 0);
   rb_define_method(cMovie, "time_scale", movie_time_scale, 0);
   rb_define_method(cMovie, "bounds", movie_bounds, 0);

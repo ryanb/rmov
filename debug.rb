@@ -3,7 +3,7 @@
 #   r debug.rb
 #   bt
 require 'lib/rmov'
-m = Quicktime::Movie.new('spec/fixtures/example.mov')
+m = Quicktime::Movie.open('spec/fixtures/example.mov')
 puts m.duration
 puts m.width
 puts m.height

@@ -7,7 +7,6 @@ Fixes
 
 Features
 - frame rate and frame count for movie and track
-- separate out Movie.new from Movie.open
 
 Possible
 - pointer to movie stream for playing movie through an interface

@@ -10,7 +10,7 @@ task to build the ruby c extensions.
 You can then require 'rmov' in the lib directory.
 
   require 'rmov'
-  movie = Quicktime::Movie.new('foo.mov')
+  movie = Quicktime::Movie.open('foo.mov')
   movie.duration # returns number of seconds of movie
 
 More features coming soon.

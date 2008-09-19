@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 describe Quicktime::Movie do
   describe "example.mov" do
     before(:each) do
-      @movie = Quicktime::Movie.new(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      @movie = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
     end
     
     it "duration should be 3.1 seconds" do

@@ -1,6 +1,10 @@
 module Quicktime
   # see rmov_ext for additional methods
   class Movie
+    def self.open(filepath)
+      new.load_from_file(filepath)
+    end
+    
     def duration
       raw_duration.to_f/time_scale
     end
