@@ -51,7 +51,7 @@ static VALUE movie_duration(VALUE obj)
   return rb_float_new((double)GetMovieDuration(*MOVIE(obj))/GetMovieTimeScale(*MOVIE(obj)));
 }
 
-void Init_rmov()
+void Init_rmov_ext()
 {
   EnterMovies(); // Enables the QuickTime framework
   mQuicktime = rb_define_module("Quicktime");
