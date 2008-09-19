@@ -45,10 +45,26 @@ static VALUE movie_init(VALUE obj, VALUE filepath)
   return Qnil;
 }
 
-// The length of the movie in seconds
-static VALUE movie_duration(VALUE obj)
+static VALUE movie_raw_duration(VALUE obj)
 {
-  return rb_float_new((double)GetMovieDuration(*MOVIE(obj))/GetMovieTimeScale(*MOVIE(obj)));
+  return INT2NUM(GetMovieDuration(*MOVIE(obj)));
+}
+
+static VALUE movie_time_scale(VALUE obj)
+{
+  return INT2NUM(GetMovieTimeScale(*MOVIE(obj)));
+}
+
+static VALUE movie_bounds(VALUE obj)
+{
+  VALUE bounds_hash = rb_hash_new();
+  Rect bounds;
+  GetMovieBox(*MOVIE(obj), &bounds);
+  rb_hash_aset(bounds_hash, ID2SYM(rb_intern("left")), INT2NUM(bounds.left));
+  rb_hash_aset(bounds_hash, ID2SYM(rb_intern("top")), INT2NUM(bounds.top));
+  rb_hash_aset(bounds_hash, ID2SYM(rb_intern("right")), INT2NUM(bounds.right));
+  rb_hash_aset(bounds_hash, ID2SYM(rb_intern("bottom")), INT2NUM(bounds.bottom));
+  return bounds_hash;
 }
 
 void Init_rmov_ext()
@@ -58,5 +74,7 @@ void Init_rmov_ext()
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
   rb_define_alloc_func(cMovie, movie_new);
   rb_define_method(cMovie, "initialize", movie_init, 1);
-  rb_define_method(cMovie, "duration", movie_duration, 0);
+  rb_define_method(cMovie, "raw_duration", movie_raw_duration, 0);
+  rb_define_method(cMovie, "time_scale", movie_time_scale, 0);
+  rb_define_method(cMovie, "bounds", movie_bounds, 0);
 }
