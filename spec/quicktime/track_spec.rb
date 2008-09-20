@@ -10,5 +10,13 @@ describe Quicktime::Track do
     it "duration should be 3.1 seconds" do
       @track.duration.should == 3.1
     end
+    
+    it "frame count should be 31" do
+      @track.frame_count.should == 31
+    end
+    
+    it "frame rate should be 10" do
+      @track.frame_rate.should == 10
+    end
   end
 end
