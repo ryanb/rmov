@@ -63,7 +63,7 @@ static VALUE movie_track_count(VALUE obj)
   return INT2NUM(GetMovieTrackCount(MOVIE(obj)));
 }
 
-void Init_quicktime_movie(VALUE mQuicktime)
+void Init_quicktime_movie()
 {
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
   rb_define_alloc_func(cMovie, movie_new);
