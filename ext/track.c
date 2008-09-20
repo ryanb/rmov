@@ -1,10 +1,12 @@
 #include "rmov_ext.h"
 
-static void track_free(struct RMovie *rMovie)
+VALUE cTrack;
+
+static void track_free(struct RTrack *rTrack)
 {
 }
 
-static void track_mark(struct RMovie *rMovie)
+static void track_mark(struct RTrack *rTrack)
 {
 }
 
@@ -35,7 +37,7 @@ static VALUE track_time_scale(VALUE obj)
   return INT2NUM(GetMediaTimeScale(TRACK_MEDIA(obj)));
 }
 
-void Init_quicktime_track()
+void Init_quicktime_track(VALUE mQuicktime)
 {
   cTrack = rb_define_class_under(mQuicktime, "Track", rb_cObject);
   rb_define_alloc_func(cTrack, track_new);
