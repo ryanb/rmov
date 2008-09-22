@@ -5,10 +5,11 @@ Features
 - export with specific settings
 - export a single frame as pict
 - resize movie canvas
-- time remap movie
 - export image sequence
 - import image sequence
 - import other file formats (mpeg, aiff, mp3, etc.)
+- get movie metadata (album, author, artist, etc.)
+- flatten movie
 
 Possible
 - add text track to movie
