@@ -95,6 +95,13 @@ static VALUE movie_insert_movie(VALUE obj, VALUE src, VALUE position)
   return obj;
 }
 
+static VALUE movie_append_movie(VALUE obj, VALUE src)
+{
+  SetMovieSelection(MOVIE(obj), GetMovieDuration(MOVIE(obj)), 0);
+  PasteMovieSelection(MOVIE(obj), MOVIE(src));
+  return obj;
+}
+
 static VALUE movie_delete_section(VALUE obj, VALUE start, VALUE duration)
 {
   SetMovieSelection(MOVIE(obj), MOVIE_TIME(obj, start), MOVIE_TIME(obj, duration));
@@ -131,6 +138,7 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "convert_to_file", movie_convert_to_file, 1);
   rb_define_method(cMovie, "composite_movie", movie_composite_movie, 2);
   rb_define_method(cMovie, "insert_movie", movie_insert_movie, 2);
+  rb_define_method(cMovie, "append_movie", movie_append_movie, 1);
   rb_define_method(cMovie, "delete_section", movie_delete_section, 2);
   rb_define_method(cMovie, "clone_section", movie_clone_section, 2);
   rb_define_method(cMovie, "clip_section", movie_clip_section, 2);

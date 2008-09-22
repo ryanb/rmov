@@ -56,6 +56,12 @@ describe Quicktime::Movie do
       @movie.duration.should == 6.2
     end
     
+    it "append_movie should insert movie at the end" do
+      m2 = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      @movie.append_movie(m2)
+      @movie.duration.should == 6.2
+    end
+    
     it "delete_section should remove a section from a movie" do
       @movie.delete_section(1, 0.6)
       @movie.duration.should == 2.5
