@@ -73,4 +73,14 @@ describe Quicktime::Movie do
       @movie.duration.should == 2.5
     end
   end
+  
+  describe "empty movie" do
+    before(:each) do
+      @movie = Quicktime::Movie.empty
+    end
+    
+    it "should have 0 duration" do
+      @movie.duration.should == 0
+    end
+  end
 end

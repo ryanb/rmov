@@ -5,6 +5,10 @@ module Quicktime
       new.load_from_file(filepath)
     end
     
+    def self.empty
+      new.load_empty
+    end
+    
     def duration
       raw_duration.to_f/time_scale
     end
