@@ -90,6 +90,9 @@ static VALUE movie_convert_to_file(VALUE obj, VALUE filepath)
   OSErr err;
   FSSpec fs;
   
+  // Activate so QuickTime doesn't export a white frame
+  SetMovieActive(MOVIE(obj), TRUE);
+  
   // TODO add error handling
   err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
   err = ConvertMovieToFile(MOVIE(obj), 0, &fs, 'MooV', 'TVOD', 0, 0, 0, 0);

@@ -1,17 +1,15 @@
 Fixes
-- better error handling when opening a movie from file
 - check if movie/track really exists each time we call it
-- ensure no memory leaks
-- ensure track is allocated and freed properly
 
 Features
-- converting movies from one to another
-- exporting PICT from movie frame
-- ability to add and remove tracks
-- save movie after modifying
-- make a movie given image sequence
+- export with specific settings
+- export a single frame as pict
+- resize movie canvas
+- time remap movie
+- export image sequence
+- import image sequence
+- import other file formats (mpeg, aiff, mp3, etc.)
 
 Possible
-- basic editing (scaling, rotating, etc.)
 - add text track to movie
 - add chapters to movie
