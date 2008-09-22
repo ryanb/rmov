@@ -18,5 +18,10 @@ describe Quicktime::Track do
     it "frame rate should be 10" do
       @track.frame_rate.should == 10
     end
+    
+    it "should be able to delete a track" do
+      @track.delete
+      @movie.video_tracks.should == []
+    end
   end
 end

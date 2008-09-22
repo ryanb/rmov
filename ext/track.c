@@ -58,6 +58,12 @@ static VALUE track_id(VALUE obj)
   return INT2NUM(GetTrackID(TRACK(obj)));
 }
 
+static VALUE track_delete(VALUE obj)
+{
+  DisposeMovieTrack(TRACK(obj));
+  return Qnil;
+}
+
 void Init_quicktime_track()
 {
   cTrack = rb_define_class_under(mQuicktime, "Track", rb_cObject);
@@ -68,4 +74,5 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "frame_count", track_frame_count, 0);
   rb_define_method(cTrack, "media_type", track_media_type, 0);
   rb_define_method(cTrack, "id", track_id, 0);
+  rb_define_method(cTrack, "delete", track_delete, 0);
 }

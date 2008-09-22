@@ -39,5 +39,9 @@ describe Quicktime::Movie do
     it "should have one audio track" do
       @movie.audio_tracks.should have(1).record
     end
+    
+    it "should have one video track" do
+      @movie.video_tracks.should have(1).record
+    end
   end
 end

@@ -24,15 +24,11 @@ module Quicktime
     end
     
     def audio_tracks
-      tracks.select do |t|
-        t.audio?
-      end
+      tracks.select { |t| t.audio? }
     end
     
     def video_tracks
-      tracks.select do |t|
-        t.video?
-      end
+      tracks.select { |t| t.video? }
     end
     
     def export(path)
