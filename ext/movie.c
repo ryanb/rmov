@@ -77,15 +77,22 @@ static VALUE movie_convert_to_file(VALUE obj, VALUE filepath)
 
 static VALUE movie_add_movie(VALUE obj, VALUE src, VALUE position)
 {
-  SetMovieSelection(MOVIE(obj), floor(NUM2DBL(position)*GetMovieTimeScale(MOVIE(obj))), 0);
+  SetMovieSelection(MOVIE(obj), MOVIE_TIME(obj, position), 0);
   AddMovieSelection(MOVIE(obj), MOVIE(src));
   return obj;
 }
 
 static VALUE movie_insert_movie(VALUE obj, VALUE src, VALUE position)
 {
-  SetMovieSelection(MOVIE(obj), floor(NUM2DBL(position)*GetMovieTimeScale(MOVIE(obj))), 0);
+  SetMovieSelection(MOVIE(obj), MOVIE_TIME(obj, position), 0);
   PasteMovieSelection(MOVIE(obj), MOVIE(src));
+  return obj;
+}
+
+static VALUE movie_delete_section(VALUE obj, VALUE start, VALUE duration)
+{
+  SetMovieSelection(MOVIE(obj), MOVIE_TIME(obj, start), MOVIE_TIME(obj, duration));
+  ClearMovieSelection(MOVIE(obj));
   return obj;
 }
 
@@ -101,4 +108,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "convert_to_file", movie_convert_to_file, 1);
   rb_define_method(cMovie, "add_movie", movie_add_movie, 2);
   rb_define_method(cMovie, "insert_movie", movie_insert_movie, 2);
+  rb_define_method(cMovie, "delete_section", movie_delete_section, 2);
 }

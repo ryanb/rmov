@@ -55,5 +55,10 @@ describe Quicktime::Movie do
       @movie.insert_movie(m2, 2)
       @movie.duration.should == 6.2
     end
+    
+    it "delete_section should remove a section from a movie" do
+      @movie.delete_section(1, 0.6)
+      @movie.duration.should == 2.5
+    end
   end
 end
