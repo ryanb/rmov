@@ -29,11 +29,19 @@ static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
     short frefnum = -1;
     short movie_resid = 0;
     Movie *movie = ALLOC(Movie);
-  
-    // TODO add error handling
+    
     err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
+    if (err != 0)
+      rb_raise(eInvalidArgument, "No readable file found at %s", RSTRING(filepath)->ptr);
+    
     err = OpenMovieFile(&fs, &frefnum, 0);
+    if (err != 0)
+      rb_raise(eInvalidArgument, "Unable to open movie at %s", RSTRING(filepath)->ptr);
+    
     err = NewMovieFromFile(movie, frefnum, &movie_resid, 0, newMovieActive, 0);
+    if (err != 0)
+      rb_raise(eInvalidArgument, "Unable to load movie at %s", RSTRING(filepath)->ptr);
+    
     RMOVIE(obj)->movie = *movie;
     
     return obj;

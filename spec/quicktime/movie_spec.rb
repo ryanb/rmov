@@ -1,6 +1,14 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 describe Quicktime::Movie do
+  it "should raise an exception when attempting to open a nonexisting file" do
+    lambda { Quicktime::Movie.open('foo.mov') }.should raise_error(Quicktime::InvalidArgument)
+  end
+  
+  it "should raise an exception when attempting to open a non movie file" do
+    lambda { Quicktime::Movie.open(__FILE__) }.should raise_error(Quicktime::InvalidArgument)
+  end
+  
   describe "example.mov" do
     before(:each) do
       @movie = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
