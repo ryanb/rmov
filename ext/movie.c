@@ -63,6 +63,18 @@ static VALUE movie_track_count(VALUE obj)
   return INT2NUM(GetMovieTrackCount(MOVIE(obj)));
 }
 
+static VALUE movie_convert_to_file(VALUE obj, VALUE filepath)
+{
+  OSErr err;
+  FSSpec fs;
+  
+  // TODO add error handling
+  err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
+  err = ConvertMovieToFile(MOVIE(obj), 0, &fs, 'MooV', 'TVOD', 0, 0, 0, 0);
+  
+  return obj;
+}
+
 void Init_quicktime_movie()
 {
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
@@ -72,4 +84,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "time_scale", movie_time_scale, 0);
   rb_define_method(cMovie, "bounds", movie_bounds, 0);
   rb_define_method(cMovie, "track_count", movie_track_count, 0);
+  rb_define_method(cMovie, "convert_to_file", movie_convert_to_file, 1);
 }

@@ -22,5 +22,9 @@ module Quicktime
         Track.new.load_from_movie(self, i)
       end
     end
+    
+    def export(path)
+      convert_to_file(path)
+    end
   end
 end

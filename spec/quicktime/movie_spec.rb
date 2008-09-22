@@ -25,5 +25,14 @@ describe Quicktime::Movie do
     it "should have 1 track" do
       @movie.tracks.map { |t| t.class }.should == [Quicktime::Track]
     end
+    
+    it "should be able to export into separate file" do
+      path = File.dirname(__FILE__) + '/../output/exported_example.mov'
+      File.delete(path) rescue nil
+      @movie.export(path)
+      exported_movie = Quicktime::Movie.open(path)
+      exported_movie.duration.should == 3.1
+      exported_movie.bounds.should == { :top => 0, :left => 0, :bottom => 50, :right => 60 }
+    end
   end
 end
