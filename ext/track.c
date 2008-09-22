@@ -64,6 +64,27 @@ static VALUE track_delete(VALUE obj)
   return Qnil;
 }
 
+static VALUE track_disable(VALUE obj, VALUE boolean)
+{
+  SetTrackEnabled(TRACK(obj), FALSE);
+  return obj;
+}
+
+static VALUE track_enable(VALUE obj, VALUE boolean)
+{
+  SetTrackEnabled(TRACK(obj), TRUE);
+  return obj;
+}
+
+static VALUE track_enabled(VALUE obj, VALUE boolean)
+{
+  if (GetTrackEnabled(TRACK(obj)) == TRUE) {
+    return Qtrue;
+  } else {
+    return Qfalse;
+  }
+}
+
 void Init_quicktime_track()
 {
   cTrack = rb_define_class_under(mQuicktime, "Track", rb_cObject);
@@ -75,4 +96,7 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "media_type", track_media_type, 0);
   rb_define_method(cTrack, "id", track_id, 0);
   rb_define_method(cTrack, "delete", track_delete, 0);
+  rb_define_method(cTrack, "enabled?", track_enabled, 0);
+  rb_define_method(cTrack, "enable", track_enable, 0);
+  rb_define_method(cTrack, "disable", track_disable, 0);
 }

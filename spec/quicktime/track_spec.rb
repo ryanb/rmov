@@ -23,5 +23,18 @@ describe Quicktime::Track do
       @track.delete
       @movie.video_tracks.should == []
     end
+    
+    it "should be able to add a track" do
+      @track.delete
+      @movie.video_tracks.should == []
+    end
+    
+    it "should be able to disable and enable a track" do
+      @track.should be_enabled
+      @track.disable
+      @track.should_not be_enabled
+      @track.enable
+      @track.should be_enabled
+    end
   end
 end
