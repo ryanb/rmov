@@ -88,5 +88,16 @@ describe Quicktime::Movie do
     it "should have 0 duration" do
       @movie.duration.should == 0
     end
+    
+    it "should be able to append an existing movie" do
+      m2 = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      @movie.append_movie(m2)
+      @movie.duration.should == 3.1
+    end
+    
+    it "should raise MovieAlreadyLoaded exception when attempting to load it again" do
+      lambda { @movie.load_empty }.should raise_error(Quicktime::MovieLoaded)
+      lambda { @movie.load_from_file('example.mov') }.should raise_error(Quicktime::MovieLoaded)
+    end
   end
 end

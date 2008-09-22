@@ -2,6 +2,7 @@
 #include <QuickTime/QuickTime.h>
 
 extern VALUE mQuicktime, cMovie, cTrack;
+extern VALUE eQuicktime, eMovieLoaded;
 
 /*** MOVIE ***/
 

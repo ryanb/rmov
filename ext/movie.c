@@ -21,25 +21,33 @@ static VALUE movie_new(VALUE klass)
 
 static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
 {
-  OSErr err;
-  FSSpec fs;
-  short frefnum = -1;
-  short movie_resid = 0;
-  Movie *movie = ALLOC(Movie);
+  if (MOVIE(obj)) {
+    rb_raise(eMovieLoaded, "Movie has already been loaded.");
+  } else {
+    OSErr err;
+    FSSpec fs;
+    short frefnum = -1;
+    short movie_resid = 0;
+    Movie *movie = ALLOC(Movie);
   
-  // TODO add error handling
-  err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
-  err = OpenMovieFile(&fs, &frefnum, 0);
-  err = NewMovieFromFile(movie, frefnum, &movie_resid, 0, newMovieActive, 0);
-  RMOVIE(obj)->movie = *movie;
-  
-  return obj;
+    // TODO add error handling
+    err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
+    err = OpenMovieFile(&fs, &frefnum, 0);
+    err = NewMovieFromFile(movie, frefnum, &movie_resid, 0, newMovieActive, 0);
+    RMOVIE(obj)->movie = *movie;
+    
+    return obj;
+  }
 }
 
 static VALUE movie_load_empty(VALUE obj)
 {
-  RMOVIE(obj)->movie = NewMovie(0);
-  return obj;
+  if (MOVIE(obj)) {
+    rb_raise(eMovieLoaded, "Movie has already been loaded.");
+  } else {
+    RMOVIE(obj)->movie = NewMovie(0);
+    return obj; 
+  }
 }
 
 static VALUE movie_raw_duration(VALUE obj)
