@@ -100,6 +100,14 @@ static VALUE movie_clone_section(VALUE obj, VALUE start, VALUE duration)
 {
   VALUE new_movie_obj = rb_obj_alloc(cMovie);
   SetMovieSelection(MOVIE(obj), MOVIE_TIME(obj, start), MOVIE_TIME(obj, duration));
+  RMOVIE(new_movie_obj)->movie = CopyMovieSelection(MOVIE(obj));
+  return new_movie_obj;
+}
+
+static VALUE movie_clip_section(VALUE obj, VALUE start, VALUE duration)
+{
+  VALUE new_movie_obj = rb_obj_alloc(cMovie);
+  SetMovieSelection(MOVIE(obj), MOVIE_TIME(obj, start), MOVIE_TIME(obj, duration));
   RMOVIE(new_movie_obj)->movie = CutMovieSelection(MOVIE(obj));
   return new_movie_obj;
 }
@@ -118,4 +126,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "insert_movie", movie_insert_movie, 2);
   rb_define_method(cMovie, "delete_section", movie_delete_section, 2);
   rb_define_method(cMovie, "clone_section", movie_clone_section, 2);
+  rb_define_method(cMovie, "clip_section", movie_clip_section, 2);
 }

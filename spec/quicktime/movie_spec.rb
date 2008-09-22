@@ -61,9 +61,16 @@ describe Quicktime::Movie do
       @movie.duration.should == 2.5
     end
     
-    it "clone_section should make a new movie from given section" do
+    it "clone_section should make a new movie from given section and leave existing movie intact" do
       mov = @movie.clone_section(1, 0.6)
       mov.duration.should == 0.6
+      @movie.duration.should == 3.1
+    end
+    
+    it "clip_section should make a new movie from given section and remove it form existing movie" do
+      mov = @movie.clip_section(1, 0.6)
+      mov.duration.should == 0.6
+      @movie.duration.should == 2.5
     end
   end
 end
