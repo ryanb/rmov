@@ -44,10 +44,16 @@ describe Quicktime::Movie do
       @movie.video_tracks.should have(1).record
     end
     
-    it "should be able to add another movie's tracks at a given location" do
+    it "add should add another movie's tracks at a given location" do
       m2 = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
       @movie.add_movie(m2, 2)
       @movie.duration.should == 5.1
+    end
+    
+    it "insert should insert another movie's tracks at a given location" do
+      m2 = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      @movie.insert_movie(m2, 2)
+      @movie.duration.should == 6.2
     end
   end
 end

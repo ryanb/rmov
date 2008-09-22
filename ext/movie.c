@@ -82,6 +82,13 @@ static VALUE movie_add_movie(VALUE obj, VALUE src, VALUE position)
   return obj;
 }
 
+static VALUE movie_insert_movie(VALUE obj, VALUE src, VALUE position)
+{
+  SetMovieSelection(MOVIE(obj), floor(NUM2DBL(position)*GetMovieTimeScale(MOVIE(obj))), 0);
+  PasteMovieSelection(MOVIE(obj), MOVIE(src));
+  return obj;
+}
+
 void Init_quicktime_movie()
 {
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
@@ -93,4 +100,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "track_count", movie_track_count, 0);
   rb_define_method(cMovie, "convert_to_file", movie_convert_to_file, 1);
   rb_define_method(cMovie, "add_movie", movie_add_movie, 2);
+  rb_define_method(cMovie, "insert_movie", movie_insert_movie, 2);
 }
