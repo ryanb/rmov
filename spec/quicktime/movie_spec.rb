@@ -24,6 +24,7 @@ describe Quicktime::Movie do
     
     it "should have 2 tracks" do
       @movie.tracks.map { |t| t.class }.should == [Quicktime::Track, Quicktime::Track]
+      @movie.tracks.map { |t| t.id }.should == [1, 2]
     end
     
     it "should be able to export into separate file" do
@@ -31,8 +32,12 @@ describe Quicktime::Movie do
       File.delete(path) rescue nil
       @movie.export(path)
       exported_movie = Quicktime::Movie.open(path)
-      exported_movie.duration.should == 3.1
-      exported_movie.bounds.should == { :top => 0, :left => 0, :bottom => 50, :right => 60 }
+      exported_movie.duration.should == @movie.duration
+      exported_movie.tracks.size == @movie.tracks.size
+    end
+    
+    it "should have one audio track" do
+      @movie.audio_tracks.should have(1).record
     end
   end
 end

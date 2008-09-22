@@ -23,6 +23,18 @@ module Quicktime
       end
     end
     
+    def audio_tracks
+      tracks.select do |t|
+        t.audio?
+      end
+    end
+    
+    def video_tracks
+      tracks.select do |t|
+        t.video?
+      end
+    end
+    
     def export(path)
       convert_to_file(path)
     end

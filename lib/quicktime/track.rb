@@ -8,5 +8,13 @@ module Quicktime
     def frame_rate # what about odd frame rates such as 29.97?
       frame_count/duration
     end
+    
+    def audio?
+      media_type == :audio
+    end
+    
+    def video?
+      media_type == :video
+    end
   end
 end

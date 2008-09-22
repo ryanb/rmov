@@ -21,10 +21,9 @@ struct RMovie {
 void Init_quicktime_track();
 
 #define RTRACK(obj) (Check_Type(obj, T_DATA), (struct RTrack*)DATA_PTR(obj))
-#define TRACK_PTR(obj) (RTRACK(obj)->track)
-#define TRACK(obj) (*TRACK_PTR(obj))
+#define TRACK(obj) (RTRACK(obj)->track)
 #define TRACK_MEDIA(obj) (GetTrackMedia(TRACK(obj)))
 
 struct RTrack {
-  Track *track;
+  Track track;
 };

@@ -4,7 +4,7 @@ describe Quicktime::Track do
   describe "example.mov" do
     before(:each) do
       @movie = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
-      @track = @movie.tracks.first
+      @track = @movie.video_tracks.first
     end
     
     it "duration should be 3.1 seconds" do
