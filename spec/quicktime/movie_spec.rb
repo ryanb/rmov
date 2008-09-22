@@ -22,8 +22,8 @@ describe Quicktime::Movie do
       @movie.height.should == 50
     end
     
-    it "should have 1 track" do
-      @movie.tracks.map { |t| t.class }.should == [Quicktime::Track]
+    it "should have 2 tracks" do
+      @movie.tracks.map { |t| t.class }.should == [Quicktime::Track, Quicktime::Track]
     end
     
     it "should be able to export into separate file" do
