@@ -75,7 +75,7 @@ static VALUE movie_convert_to_file(VALUE obj, VALUE filepath)
   return obj;
 }
 
-static VALUE movie_add_movie(VALUE obj, VALUE src, VALUE position)
+static VALUE movie_composite_movie(VALUE obj, VALUE src, VALUE position)
 {
   SetMovieSelection(MOVIE(obj), MOVIE_TIME(obj, position), 0);
   AddMovieSelection(MOVIE(obj), MOVIE(src));
@@ -122,7 +122,7 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "bounds", movie_bounds, 0);
   rb_define_method(cMovie, "track_count", movie_track_count, 0);
   rb_define_method(cMovie, "convert_to_file", movie_convert_to_file, 1);
-  rb_define_method(cMovie, "add_movie", movie_add_movie, 2);
+  rb_define_method(cMovie, "composite_movie", movie_composite_movie, 2);
   rb_define_method(cMovie, "insert_movie", movie_insert_movie, 2);
   rb_define_method(cMovie, "delete_section", movie_delete_section, 2);
   rb_define_method(cMovie, "clone_section", movie_clone_section, 2);
