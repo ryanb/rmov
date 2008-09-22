@@ -44,9 +44,9 @@ static VALUE track_media_type(VALUE obj)
   OSType media_type;
   
   GetMediaHandlerDescription(TRACK_MEDIA(obj), &media_type, 0, 0);
-  if (media_type == 'soun') {
+  if (media_type == SoundMediaType) {
     return ID2SYM(rb_intern("audio"));
-  } else if (media_type == 'vide') {
+  } else if (media_type == VideoMediaType) {
     return ID2SYM(rb_intern("video"));
   } else {
     return Qnil;
