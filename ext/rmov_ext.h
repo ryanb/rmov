@@ -8,12 +8,11 @@ extern VALUE mQuicktime, cMovie, cTrack;
 void Init_quicktime_movie();
 
 #define RMOVIE(obj) (Check_Type(obj, T_DATA), (struct RMovie*)DATA_PTR(obj))
-#define MOVIE_PTR(obj) (RMOVIE(obj)->movie)
-#define MOVIE(obj) (*MOVIE_PTR(obj))
+#define MOVIE(obj) (RMOVIE(obj)->movie)
 #define MOVIE_TIME(obj, seconds) (floor(NUM2DBL(seconds)*GetMovieTimeScale(MOVIE(obj))))
 
 struct RMovie {
-  Movie *movie;
+  Movie movie;
 };
 
 

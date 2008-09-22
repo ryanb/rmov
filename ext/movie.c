@@ -5,7 +5,7 @@ VALUE cMovie;
 static void movie_free(struct RMovie *rMovie)
 {
   if (rMovie->movie)
-    DisposeMovie(*rMovie->movie);
+    DisposeMovie(rMovie->movie);
 }
 
 static void movie_mark(struct RMovie *rMovie)
@@ -31,7 +31,7 @@ static VALUE movie_load(VALUE obj, VALUE filepath)
   err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
   err = OpenMovieFile(&fs, &frefnum, 0);
   err = NewMovieFromFile(movie, frefnum, &movie_resid, 0, newMovieActive, 0);
-  RMOVIE(obj)->movie = movie;
+  RMOVIE(obj)->movie = *movie;
   
   return obj;
 }
@@ -96,6 +96,14 @@ static VALUE movie_delete_section(VALUE obj, VALUE start, VALUE duration)
   return obj;
 }
 
+static VALUE movie_clone_section(VALUE obj, VALUE start, VALUE duration)
+{
+  VALUE new_movie_obj = rb_obj_alloc(cMovie);
+  SetMovieSelection(MOVIE(obj), MOVIE_TIME(obj, start), MOVIE_TIME(obj, duration));
+  RMOVIE(new_movie_obj)->movie = CutMovieSelection(MOVIE(obj));
+  return new_movie_obj;
+}
+
 void Init_quicktime_movie()
 {
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
@@ -109,4 +117,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "add_movie", movie_add_movie, 2);
   rb_define_method(cMovie, "insert_movie", movie_insert_movie, 2);
   rb_define_method(cMovie, "delete_section", movie_delete_section, 2);
+  rb_define_method(cMovie, "clone_section", movie_clone_section, 2);
 }
