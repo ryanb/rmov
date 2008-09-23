@@ -34,9 +34,5 @@ module Quicktime
     def video_tracks
       tracks.select { |t| t.video? }
     end
-    
-    def export(path)
-      convert_to_file(path)
-    end
   end
 end

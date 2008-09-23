@@ -38,7 +38,11 @@ describe Quicktime::Movie do
     it "should be able to export into separate file" do
       path = File.dirname(__FILE__) + '/../output/exported_example.mov'
       File.delete(path) rescue nil
-      @movie.export(path)
+      
+      progress = 0
+      @movie.export(path) { |p| progress = p }
+      progress.should == 1.0
+      
       exported_movie = Quicktime::Movie.open(path)
       exported_movie.duration.should == @movie.duration
       exported_movie.tracks.size == @movie.tracks.size
