@@ -1,4 +1,4 @@
 *.o
 *.bundle
 Makefile
-spec/output/*
+spec/output/*.mov
