@@ -7,6 +7,7 @@ extern VALUE eQuicktime, eMovieLoaded, eInvalidArgument;
 /*** MOVIE ***/
 
 void Init_quicktime_movie();
+OSErr movie_progress_proc(Movie movie, short message, short operation, Fixed percent, VALUE proc);
 
 #define RMOVIE(obj) (Check_Type(obj, T_DATA), (struct RMovie*)DATA_PTR(obj))
 #define MOVIE(obj) (RMOVIE(obj)->movie)
@@ -27,4 +28,15 @@ void Init_quicktime_track();
 
 struct RTrack {
   Track track;
+};
+
+
+/*** EXPORTER ***/
+
+void Init_quicktime_exporter();
+
+#define REXPORTER(obj) (Check_Type(obj, T_DATA), (struct RExporter*)DATA_PTR(obj))
+
+struct RExporter {
+  QTAtomContainer atom;
 };

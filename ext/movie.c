@@ -91,27 +91,6 @@ static VALUE movie_track_count(VALUE obj)
   return INT2NUM(GetMovieTrackCount(MOVIE(obj)));
 }
 
-static VALUE movie_export_to_file(VALUE obj, VALUE filepath)
-{
-  OSErr err;
-  FSSpec fs;
-  
-  if (rb_block_given_p())
-    SetMovieProgressProc(MOVIE(obj), (MovieProgressUPP)movie_progress_proc, rb_block_proc());
-  
-  // Activate so QuickTime doesn't export a white frame
-  SetMovieActive(MOVIE(obj), TRUE);
-  
-  // TODO add error handling
-  err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
-  err = ConvertMovieToFile(MOVIE(obj), 0, &fs, 'MooV', 'TVOD', 0, 0, 0, 0);
-  
-  if (rb_block_given_p())
-    SetMovieProgressProc(MOVIE(obj), 0, 0);
-  
-  return obj;
-}
-
 static VALUE movie_composite_movie(VALUE obj, VALUE src, VALUE position)
 {
   if (rb_block_given_p())
@@ -203,7 +182,6 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "time_scale", movie_time_scale, 0);
   rb_define_method(cMovie, "bounds", movie_bounds, 0);
   rb_define_method(cMovie, "track_count", movie_track_count, 0);
-  rb_define_method(cMovie, "export", movie_export_to_file, 1);
   rb_define_method(cMovie, "composite_movie", movie_composite_movie, 2);
   rb_define_method(cMovie, "insert_movie", movie_insert_movie, 2);
   rb_define_method(cMovie, "append_movie", movie_append_movie, 1);

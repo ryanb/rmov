@@ -1,5 +1,5 @@
 module Quicktime
-  # see rmov_ext for additional methods
+  # see ext/movie.c for additional methods
   class Movie
     def self.open(filepath)
       new.load_from_file(filepath)
@@ -33,6 +33,14 @@ module Quicktime
     
     def video_tracks
       tracks.select { |t| t.video? }
+    end
+    
+    def exporter
+      Exporter.new(self)
+    end
+    
+    def export(*args, &block)
+      exporter.export(*args, &block)
     end
   end
 end

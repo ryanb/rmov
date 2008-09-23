@@ -4,3 +4,4 @@ require File.dirname(__FILE__) + '/../ext/rmov_ext'
 
 require 'quicktime/movie'
 require 'quicktime/track'
+require 'quicktime/exporter'

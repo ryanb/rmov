@@ -4,7 +4,6 @@ VALUE cTrack;
 
 static void track_free(struct RTrack *rTrack)
 {
-  // TODO ensure I don't need to dispose the track or media here
 }
 
 static void track_mark(struct RTrack *rTrack)

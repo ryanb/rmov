@@ -14,4 +14,5 @@ void Init_rmov_ext()
   eInvalidArgument = rb_define_class_under(mQuicktime, "InvalidArgument", eQuicktime);
   Init_quicktime_movie();
   Init_quicktime_track();
+  Init_quicktime_exporter();
 }

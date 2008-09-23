@@ -90,6 +90,12 @@ describe Quicktime::Movie do
       mov.duration.should == 0.6
       @movie.duration.should == 2.5
     end
+    
+    it "should have an exporter with this movie" do
+      exporter = @movie.exporter
+      exporter.should be_kind_of(Quicktime::Exporter)
+      exporter.movie.should == @movie
+    end
   end
   
   describe "empty movie" do
