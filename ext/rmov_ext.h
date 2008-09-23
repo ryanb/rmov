@@ -38,5 +38,5 @@ void Init_quicktime_exporter();
 #define REXPORTER(obj) (Check_Type(obj, T_DATA), (struct RExporter*)DATA_PTR(obj))
 
 struct RExporter {
-  QTAtomContainer atom;
+  QTAtomContainer *settings;
 };
