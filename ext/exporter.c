@@ -19,11 +19,21 @@ static VALUE exporter_new(VALUE klass)
   return Data_Make_Struct(klass, struct RExporter, exporter_mark, exporter_free, rExporter);
 }
 
+static ComponentInstance exporter_component(VALUE obj)
+{
+  ComponentInstance component = OpenDefaultComponent('spit', 'MooV');
+  if (REXPORTER(obj)->settings) {
+    MovieExportSetSettingsFromAtomContainer(component, REXPORTER(obj)->settings);
+  }
+  return component;
+}
+
 static VALUE exporter_export_to_file(VALUE obj, VALUE filepath)
 {
   OSErr err;
   FSSpec fs;
   Movie movie = MOVIE(rb_iv_get(obj, "@movie"));
+  ComponentInstance component = exporter_component(obj);
   
   if (rb_block_given_p())
     SetMovieProgressProc(movie, (MovieProgressUPP)movie_progress_proc, rb_block_proc());
@@ -35,12 +45,15 @@ static VALUE exporter_export_to_file(VALUE obj, VALUE filepath)
   if (err != fnfErr)
     rb_raise(eQuicktime, "Error while attempting to open file for export at %s.", RSTRING(filepath)->ptr);
   
-  err = ConvertMovieToFile(movie, 0, &fs, 'MooV', 'TVOD', 0, 0, 0, 0);
+  // TODO use exporter settings when converting movie
+  err = ConvertMovieToFile(movie, 0, &fs, 'MooV', 'TVOD', 0, 0, 0, component);
   if (err != noErr)
     rb_raise(eQuicktime, "Error while attempting to export movie to file %s.", RSTRING(filepath)->ptr);
   
   if (rb_block_given_p())
     SetMovieProgressProc(movie, 0, 0);
+  
+  CloseComponent(component);
   
   return Qnil;
 }
@@ -51,7 +64,7 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
   OSErr err;
   ProcessSerialNumber current_process = {0, kCurrentProcess};
   Movie movie = MOVIE(rb_iv_get(obj, "@movie"));
-  ComponentInstance component = OpenDefaultComponent('spit', 'MooV');
+  ComponentInstance component = exporter_component(obj);
   
   // Bring this process to the front
   if (!IsProcessVisible(&current_process)) {
@@ -76,7 +89,7 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
     MovieExportGetSettingsAsAtomContainer(component, &REXPORTER(obj)->settings);
   }
   
-  QTCloseComponent(component);
+  CloseComponent(component);
   
   if (canceled) {
     return Qfalse;

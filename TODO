@@ -1,17 +1,19 @@
 Fixes
 - check if movie/track really exists each time we call it
+- add rdocs
+- fill README
 
 Features
-- export with specific settings
 - export a single frame as pict
-- resize movie canvas
+- resize movie
 - export image sequence
 - import image sequence
 - import other file formats (mpeg, aiff, mp3, etc.)
 - get movie metadata (album, author, artist, etc.)
-- flatten movie
-- get and set metadata
+- set movie metadata
+- programatically adjust export settings (framerate, codec, etc.)
 
 Possible
 - add text track to movie
 - add chapters to movie
+- time remapping
