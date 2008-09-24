@@ -18,8 +18,10 @@ static VALUE track_new(VALUE klass)
 
 static VALUE track_load(VALUE obj, VALUE movie_obj, VALUE index_obj)
 {
-  // TODO add error handling
   RTRACK(obj)->track = GetMovieIndTrack(MOVIE(movie_obj), NUM2INT(index_obj));
+  if (!RTRACK(obj)->track)
+    rb_raise(eQuicktime, "Unable to fetch track for movie at index %d", NUM2INT(index_obj));
+  
   return obj;
 }
 

@@ -4,6 +4,9 @@ VALUE cExporter;
 
 static void exporter_free(struct RExporter *rExporter)
 {
+  if (rExporter->settings) {
+    QTDisposeAtomContainer(rExporter->settings);
+  }
 }
 
 static void exporter_mark(struct RExporter *rExporter)
@@ -28,9 +31,13 @@ static VALUE exporter_export_to_file(VALUE obj, VALUE filepath)
   // Activate so QuickTime doesn't export a white frame
   SetMovieActive(movie, TRUE);
   
-  // TODO add error handling
   err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
+  if (err != fnfErr)
+    rb_raise(eQuicktime, "Error while attempting to open file for export at %s.", RSTRING(filepath)->ptr);
+  
   err = ConvertMovieToFile(movie, 0, &fs, 'MooV', 'TVOD', 0, 0, 0, 0);
+  if (err != noErr)
+    rb_raise(eQuicktime, "Error while attempting to export movie to file %s.", RSTRING(filepath)->ptr);
   
   if (rb_block_given_p())
     SetMovieProgressProc(movie, 0, 0);
@@ -42,47 +49,69 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
 {
   Boolean canceled;
   OSErr err;
-  ProcessSerialNumber psn = {0, kCurrentProcess};
+  ProcessSerialNumber current_process = {0, kCurrentProcess};
   Movie movie = MOVIE(rb_iv_get(obj, "@movie"));
   ComponentInstance component = OpenDefaultComponent('spit', 'MooV');
   
-  // Attempt to bring this process to the front
-  // TODO is it okay if this process is transformed multiple times?
-  err = TransformProcessType(&psn, kProcessTransformToForegroundApplication);
-  if (err == noErr) {
-    (void)SetFrontProcess(&psn);
+  // Bring this process to the front
+  if (!IsProcessVisible(&current_process)) {
+    err = TransformProcessType(&current_process, kProcessTransformToForegroundApplication);
+    if (err != noErr) {
+      rb_raise(eQuicktime, "Error while attempting to put make this a forground application.");
+    }
+  }
+  SetFrontProcess(&current_process);
+  
+  // Show export dialog and save settings
+  err = MovieExportDoUserDialog(component, movie, 0, 0, GetMovieDuration(movie), &canceled);
+  if (err != noErr) {
+    rb_raise(eQuicktime, "Error while attempting to open export dialog");
   }
   
-  // TODO add error handling
-  err = MovieExportDoUserDialog(component, movie, 0, 0, GetMovieDuration(movie), &canceled);
+  if (!canceled) {
+    // Clear existing settings if there are any
+    if (REXPORTER(obj)->settings) {
+      QTDisposeAtomContainer(REXPORTER(obj)->settings);
+    }
+    MovieExportGetSettingsAsAtomContainer(component, &REXPORTER(obj)->settings);
+  }
+  
+  QTCloseComponent(component);
+  
   if (canceled) {
     return Qfalse;
   } else {
-    MovieExportGetSettingsAsAtomContainer(component, &REXPORTER(obj)->settings);
     return Qtrue;
   }
-  
-  // TODO we need to dispose of this atom container and close the component
 }
 
 static VALUE exporter_load_settings(VALUE obj, VALUE filepath)
 {
   FILE *file;
-  long length;
-  QTAtomContainer atom;
+  long length, read_length;
   
-  // TODO add error handling
   file = fopen(RSTRING(filepath)->ptr, "r+b");
+  if (!file) {
+    rb_raise(eQuicktime, "Unable to open file for loading at %s.", RSTRING(filepath)->ptr);
+  }
   
   // obtain file size:
   fseek(file , 0, SEEK_END);
   length = ftell(file);
   rewind(file);
   
-  // load the file
-  // TODO dispose of old settings if it's already set
+  // clear existing settings if there are any
+  if (REXPORTER(obj)->settings) {
+    QTDisposeAtomContainer(REXPORTER(obj)->settings);
+  }
+  
+  // load the file into settings
   REXPORTER(obj)->settings = (QTAtomContainer)NewHandleClear(length);
-  fread(*(Handle)atom, length, 1, file);
+  read_length = fread(*(Handle)REXPORTER(obj)->settings, 1, length, file);
+  if (read_length != length) {
+    rb_raise(eQuicktime, "Unable to read entire file at %s.", RSTRING(filepath)->ptr);
+  }
+  
   fclose(file);
   
   return Qnil;
@@ -93,8 +122,14 @@ static VALUE exporter_save_settings(VALUE obj, VALUE filepath)
   FILE *file;
   QTAtomContainer settings = REXPORTER(obj)->settings;
   
-  // TODO add error handling
+  if (!settings) {
+    rb_raise(eQuicktime, "Unable to save settings because no settings are specified.");
+  }
+  
   file = fopen(RSTRING(filepath)->ptr, "wb");
+  if (!file) {
+    rb_raise(eQuicktime, "Unable to open file for saving at %s.", RSTRING(filepath)->ptr);
+  }
   fwrite(&settings, GetHandleSize((Handle)settings), 1, file);
   fclose(file);
   

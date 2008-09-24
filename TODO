@@ -10,6 +10,7 @@ Features
 - import other file formats (mpeg, aiff, mp3, etc.)
 - get movie metadata (album, author, artist, etc.)
 - flatten movie
+- get and set metadata
 
 Possible
 - add text track to movie

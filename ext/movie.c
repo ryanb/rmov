@@ -16,7 +16,6 @@ static void movie_free(struct RMovie *rMovie)
 
 static void movie_mark(struct RMovie *rMovie)
 {
-  
 }
 
 static VALUE movie_new(VALUE klass)
@@ -28,7 +27,7 @@ static VALUE movie_new(VALUE klass)
 static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
 {
   if (MOVIE(obj)) {
-    rb_raise(eMovieLoaded, "Movie has already been loaded.");
+    rb_raise(eQuicktime, "Movie has already been loaded.");
   } else {
     OSErr err;
     FSSpec fs;
@@ -38,15 +37,19 @@ static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
     
     err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
     if (err != 0)
-      rb_raise(eInvalidArgument, "No readable file found at %s", RSTRING(filepath)->ptr);
+      rb_raise(eQuicktime, "No readable file found at %s", RSTRING(filepath)->ptr);
     
     err = OpenMovieFile(&fs, &frefnum, 0);
     if (err != 0)
-      rb_raise(eInvalidArgument, "Unable to open movie at %s", RSTRING(filepath)->ptr);
+      rb_raise(eQuicktime, "Unable to open movie at %s", RSTRING(filepath)->ptr);
     
     err = NewMovieFromFile(movie, frefnum, &movie_resid, 0, newMovieActive, 0);
     if (err != 0)
-      rb_raise(eInvalidArgument, "Unable to load movie at %s", RSTRING(filepath)->ptr);
+      rb_raise(eQuicktime, "Unable to load movie at %s", RSTRING(filepath)->ptr);
+    
+    err = CloseMovieFile(frefnum);
+    if (err != 0)
+      rb_raise(eQuicktime, "Unable to close movie file at %s", RSTRING(filepath)->ptr);
     
     RMOVIE(obj)->movie = *movie;
     
@@ -57,7 +60,7 @@ static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
 static VALUE movie_load_empty(VALUE obj)
 {
   if (MOVIE(obj)) {
-    rb_raise(eMovieLoaded, "Movie has already been loaded.");
+    rb_raise(eQuicktime, "Movie has already been loaded.");
   } else {
     RMOVIE(obj)->movie = NewMovie(0);
     return obj; 
