@@ -102,6 +102,12 @@ describe Quicktime::Movie do
       @movie.delete_section(1, 0.6)
       @movie.should be_changed
     end
+    
+    it "should be able to clear changed status" do
+      @movie.delete_section(1, 0.6)
+      @movie.clear_changed_status
+      @movie.should_not be_changed
+    end
   end
   
   describe "empty movie" do
