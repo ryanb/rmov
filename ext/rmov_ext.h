@@ -1,7 +1,7 @@
 #include <ruby.h>
 #include <QuickTime/QuickTime.h>
 
-extern VALUE mQuicktime, cMovie, cTrack;
+extern VALUE mQuicktime, cMovie, cTrack, cExporter;
 extern VALUE eQuicktime, eMovieLoaded, eInvalidArgument;
 
 /*** MOVIE ***/
@@ -38,5 +38,5 @@ void Init_quicktime_exporter();
 #define REXPORTER(obj) (Check_Type(obj, T_DATA), (struct RExporter*)DATA_PTR(obj))
 
 struct RExporter {
-  QTAtomContainer *settings;
+  QTAtomContainer settings;
 };
