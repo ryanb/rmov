@@ -175,6 +175,15 @@ static VALUE movie_clip_section(VALUE obj, VALUE start, VALUE duration)
   return new_movie_obj;
 }
 
+static VALUE movie_changed(VALUE obj)
+{
+  if (HasMovieChanged(MOVIE(obj))) {
+    return Qtrue;
+  } else {
+    return Qfalse;
+  }
+}
+
 void Init_quicktime_movie()
 {
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
@@ -191,4 +200,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "delete_section", movie_delete_section, 2);
   rb_define_method(cMovie, "clone_section", movie_clone_section, 2);
   rb_define_method(cMovie, "clip_section", movie_clip_section, 2);
+  rb_define_method(cMovie, "changed?", movie_changed, 0);
 }

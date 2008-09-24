@@ -96,6 +96,12 @@ describe Quicktime::Movie do
       exporter.should be_kind_of(Quicktime::Exporter)
       exporter.movie.should == @movie
     end
+    
+    it "should say when movie has changed" do
+      @movie.should_not be_changed
+      @movie.delete_section(1, 0.6)
+      @movie.should be_changed
+    end
   end
   
   describe "empty movie" do
