@@ -2,3 +2,4 @@
 *.bundle
 Makefile
 spec/output/*.mov
+spec/output/*.st

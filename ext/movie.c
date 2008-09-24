@@ -190,6 +190,26 @@ static VALUE movie_clear_changed_status(VALUE obj)
   return Qnil;
 }
 
+static VALUE movie_flatten(VALUE obj, VALUE filepath)
+{
+  OSErr err;
+  FSSpec fs;
+  VALUE new_movie_obj = rb_obj_alloc(cMovie);
+  
+  err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
+  if (err != fnfErr)
+    rb_raise(eQuicktime, "Error while attempting to open file for export at %s.", RSTRING(filepath)->ptr);
+  
+  // TODO make these flags settable through an options hash
+  RMOVIE(new_movie_obj)->movie = FlattenMovieData(MOVIE(obj),
+                                  flattenDontInterleaveFlatten
+                                  | flattenCompressMovieResource
+                                  | flattenAddMovieToDataFork
+                                  | flattenForceMovieResourceBeforeMovieData,
+                                  &fs, 'TVOD', smSystemScript, createMovieFileDontCreateResFile);
+  return new_movie_obj;
+}
+
 void Init_quicktime_movie()
 {
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
@@ -208,4 +228,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "clip_section", movie_clip_section, 2);
   rb_define_method(cMovie, "changed?", movie_changed, 0);
   rb_define_method(cMovie, "clear_changed_status", movie_clear_changed_status, 0);
+  rb_define_method(cMovie, "flatten", movie_flatten, 1);
 }

@@ -108,6 +108,14 @@ describe Quicktime::Movie do
       @movie.clear_changed_status
       @movie.should_not be_changed
     end
+    
+    it "flatten should save movie into file" do
+      path = File.dirname(__FILE__) + '/../output/flattened_example.mov'
+      File.delete(path) rescue nil
+      @movie.flatten(path)
+      mov = Quicktime::Movie.open(path)
+      mov.duration.should == 3.1
+    end
   end
   
   describe "empty movie" do
