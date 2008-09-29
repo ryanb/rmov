@@ -210,6 +210,46 @@ static VALUE movie_flatten(VALUE obj, VALUE filepath)
   return new_movie_obj;
 }
 
+static VALUE movie_export_pict(VALUE obj, VALUE filepath, VALUE frame_time)
+{
+  GraphicsImportComponent component;
+  PicHandle picture;
+  Handle handle;
+  FSSpec fs;
+  OSErr err;
+  
+  picture = GetMoviePict(MOVIE(obj), MOVIE_TIME(obj, frame_time));
+  
+  err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
+  if (err != fnfErr)
+    rb_raise(eQuicktime, "Error while attempting to open file for export at %s.", RSTRING(filepath)->ptr);
+  
+  // Convert the picture handle into a PICT file (still in a handle)
+  // by adding a 512-byte header to the start.
+  handle = NewHandleClear(512);
+  err = HandAndHand((Handle)picture, handle);
+  if (err != noErr)
+    rb_raise(eQuicktime, "Error while attempting to convert handle for pict export %s.", RSTRING(filepath)->ptr);
+  
+  err = OpenADefaultComponent(GraphicsImporterComponentType, kQTFileTypePicture, &component);
+  if (err != noErr)
+    rb_raise(eQuicktime, "Error while opening picture component for %s.", RSTRING(filepath)->ptr);
+  
+  err = GraphicsImportSetDataHandle(component, handle);
+  if (err != noErr)
+    rb_raise(eQuicktime, "Error while setting graphics importer data handle for %s.", RSTRING(filepath)->ptr);
+  
+  err = GraphicsImportExportImageFile(component, 'PICT', 0, &fs, smSystemScript);
+  if (err != noErr)
+    rb_raise(eQuicktime, "Error exporting pict to file %s.", RSTRING(filepath)->ptr);
+  
+  CloseComponent(component);
+  DisposeHandle(handle);
+  DisposeHandle((Handle)picture);
+  
+  return Qnil;
+}
+
 void Init_quicktime_movie()
 {
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
@@ -229,4 +269,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "changed?", movie_changed, 0);
   rb_define_method(cMovie, "clear_changed_status", movie_clear_changed_status, 0);
   rb_define_method(cMovie, "flatten", movie_flatten, 1);
+  rb_define_method(cMovie, "export_pict", movie_export_pict, 2);
 }

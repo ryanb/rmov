@@ -116,6 +116,12 @@ describe Quicktime::Movie do
       mov = Quicktime::Movie.open(path)
       mov.duration.should == 3.1
     end
+    
+    it "export_pict should output a pict file at a given duration" do
+      path = File.dirname(__FILE__) + '/../output/example.pct'
+      File.delete(path) rescue nil
+      @movie.export_pict(path, 1.2)
+    end
   end
   
   describe "empty movie" do
