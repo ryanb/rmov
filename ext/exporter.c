@@ -43,12 +43,12 @@ static VALUE exporter_export_to_file(VALUE obj, VALUE filepath)
   
   err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
   if (err != fnfErr)
-    rb_raise(eQuicktime, "Error while attempting to open file for export at %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuicktime, "Error %d occurred while opening file for export at %s.", err, RSTRING(filepath)->ptr);
   
   // TODO use exporter settings when converting movie
   err = ConvertMovieToFile(movie, 0, &fs, 'MooV', 'TVOD', 0, 0, 0, component);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error while attempting to export movie to file %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuicktime, "Error %d occurred while attempting to export movie to file %s.", err, RSTRING(filepath)->ptr);
   
   if (rb_block_given_p())
     SetMovieProgressProc(movie, 0, 0);
@@ -70,7 +70,7 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
   if (!IsProcessVisible(&current_process)) {
     err = TransformProcessType(&current_process, kProcessTransformToForegroundApplication);
     if (err != noErr) {
-      rb_raise(eQuicktime, "Error while attempting to put make this a forground application.");
+      rb_raise(eQuicktime, "Error %d occurred while brining this application to the forground.", err);
     }
   }
   SetFrontProcess(&current_process);
@@ -78,7 +78,7 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
   // Show export dialog and save settings
   err = MovieExportDoUserDialog(component, movie, 0, 0, GetMovieDuration(movie), &canceled);
   if (err != noErr) {
-    rb_raise(eQuicktime, "Error while attempting to open export dialog");
+    rb_raise(eQuicktime, "Error %d occurred while opening export dialog.", err);
   }
   
   if (!canceled) {

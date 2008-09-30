@@ -37,19 +37,19 @@ static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
     
     err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
     if (err != 0)
-      rb_raise(eQuicktime, "No readable file found at %s", RSTRING(filepath)->ptr);
+      rb_raise(eQuicktime, "Error %d occurred while reading file at %s", err, RSTRING(filepath)->ptr);
     
-    err = OpenMovieFile(&fs, &frefnum, 0);
+    err = OpenMovieFile(&fs, &frefnum, fsRdPerm);
     if (err != 0)
-      rb_raise(eQuicktime, "Unable to open movie at %s", RSTRING(filepath)->ptr);
+      rb_raise(eQuicktime, "Error %d occurred while opening movie at %s", err, RSTRING(filepath)->ptr);
     
     err = NewMovieFromFile(movie, frefnum, &movie_resid, 0, newMovieActive, 0);
     if (err != 0)
-      rb_raise(eQuicktime, "Unable to load movie at %s", RSTRING(filepath)->ptr);
+      rb_raise(eQuicktime, "Error %d occurred while loading movie at %s", err, RSTRING(filepath)->ptr);
     
     err = CloseMovieFile(frefnum);
     if (err != 0)
-      rb_raise(eQuicktime, "Unable to close movie file at %s", RSTRING(filepath)->ptr);
+      rb_raise(eQuicktime, "Error %d occurred while closing movie file at %s", err, RSTRING(filepath)->ptr);
     
     RMOVIE(obj)->movie = *movie;
     
@@ -198,7 +198,7 @@ static VALUE movie_flatten(VALUE obj, VALUE filepath)
   
   err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
   if (err != fnfErr)
-    rb_raise(eQuicktime, "Error while attempting to open file for export at %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuicktime, "Error %d occurred while opening file for export at %s", err, RSTRING(filepath)->ptr);
   
   // TODO make these flags settable through an options hash
   RMOVIE(new_movie_obj)->movie = FlattenMovieData(MOVIE(obj),
@@ -222,26 +222,26 @@ static VALUE movie_export_pict(VALUE obj, VALUE filepath, VALUE frame_time)
   
   err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
   if (err != fnfErr)
-    rb_raise(eQuicktime, "Error while attempting to open file for export at %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuicktime, "Error %d occurred while opening file for export at %s.", err, RSTRING(filepath)->ptr);
   
   // Convert the picture handle into a PICT file (still in a handle)
   // by adding a 512-byte header to the start.
   handle = NewHandleClear(512);
   err = HandAndHand((Handle)picture, handle);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error while attempting to convert handle for pict export %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuicktime, "Error %d occurred while converting handle for pict export %s.", err, RSTRING(filepath)->ptr);
   
   err = OpenADefaultComponent(GraphicsImporterComponentType, kQTFileTypePicture, &component);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error while opening picture component for %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuicktime, "Error %d occurred while opening picture component for %s.", err, RSTRING(filepath)->ptr);
   
   err = GraphicsImportSetDataHandle(component, handle);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error while setting graphics importer data handle for %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuicktime, "Error %d occurred while setting graphics importer data handle for %s.", err, RSTRING(filepath)->ptr);
   
   err = GraphicsImportExportImageFile(component, 'PICT', 0, &fs, smSystemScript);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error exporting pict to file %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuicktime, "Error %d occurred while exporting pict to file %s.", err, RSTRING(filepath)->ptr);
   
   CloseComponent(component);
   DisposeHandle(handle);
