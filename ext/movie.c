@@ -10,8 +10,9 @@ OSErr movie_progress_proc(Movie movie, short message, short operation, Fixed per
 
 static void movie_free(struct RMovie *rMovie)
 {
-  if (rMovie->movie)
+  if (rMovie->movie) {
     DisposeMovie(rMovie->movie);
+  }
 }
 
 static void movie_mark(struct RMovie *rMovie)
@@ -22,6 +23,15 @@ static VALUE movie_new(VALUE klass)
 {
   struct RMovie *rMovie;
   return Data_Make_Struct(klass, struct RMovie, movie_mark, movie_free, rMovie);
+}
+
+static VALUE movie_dispose(VALUE obj)
+{
+  if (MOVIE(obj)) {
+    DisposeMovie(MOVIE(obj));
+    RMOVIE(obj)->movie = NULL;
+  }
+  return obj;
 }
 
 static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
@@ -270,4 +280,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "clear_changed_status", movie_clear_changed_status, 0);
   rb_define_method(cMovie, "flatten", movie_flatten, 1);
   rb_define_method(cMovie, "export_pict", movie_export_pict, 2);
+  rb_define_method(cMovie, "dispose", movie_dispose, 0);
 }
