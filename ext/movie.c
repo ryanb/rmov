@@ -249,7 +249,7 @@ static VALUE movie_export_pict(VALUE obj, VALUE filepath, VALUE frame_time)
   if (err != noErr)
     rb_raise(eQuicktime, "Error %d occurred while setting graphics importer data handle for %s.", err, RSTRING(filepath)->ptr);
   
-  err = GraphicsImportExportImageFile(component, 'PICT', 0, &fs, smSystemScript);
+  err = GraphicsImportExportImageFile(component, 0, 0, &fs, smSystemScript);
   if (err != noErr)
     rb_raise(eQuicktime, "Error %d occurred while exporting pict to file %s.", err, RSTRING(filepath)->ptr);
   
