@@ -13,6 +13,12 @@ static void exporter_mark(struct RExporter *rExporter)
 {
 }
 
+/*
+  Creates a new exporter instance. Usually this is done through movie.exporter.
+
+call-seq:
+  new(movie) -> exporter
+*/
 static VALUE exporter_new(VALUE klass)
 {
   struct RExporter *rExporter;
@@ -28,6 +34,17 @@ static ComponentInstance exporter_component(VALUE obj)
   return component;
 }
 
+/*
+  Exports a movie to the given filepath. This will use either the 
+  settings you set beforehand, or QuickTime's defaults.
+
+  You can track the progress of this operation by passing a block to this 
+  method. It will be called regularly during the process and pass the 
+  percentage complete (0.0 to 1.0) as an argument to the block.
+
+call-seq:
+  export_to_file(filepath)
+*/
 static VALUE exporter_export_to_file(VALUE obj, VALUE filepath)
 {
   OSErr err;
@@ -58,6 +75,16 @@ static VALUE exporter_export_to_file(VALUE obj, VALUE filepath)
   return Qnil;
 }
 
+/*
+  Opens the offical QuickTime GUI settings dialog. The process will be 
+  suspended until the user closes the dialogue. If the user clicks Okay 
+  the settings will be applied to this Exporter. You can then use 
+  save_settings to save them to a file, and load_settings to load them 
+  back again.
+
+call-seq:
+  open_settings_dialog()
+*/
 static VALUE exporter_open_settings_dialog(VALUE obj)
 {
   Boolean canceled;
@@ -98,6 +125,12 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
   }
 }
 
+/*
+  Loads the settings at the given filepath. See save_settings.
+
+call-seq:
+  load_settings(filepath)
+*/
 static VALUE exporter_load_settings(VALUE obj, VALUE filepath)
 {
   FILE *file;
@@ -130,6 +163,13 @@ static VALUE exporter_load_settings(VALUE obj, VALUE filepath)
   return Qnil;
 }
 
+/*
+  Saves the settings to the given filepath (usually with .st extension). 
+  See open_settings_dialog and load_settings.
+
+call-seq:
+  save_settings(filepath)
+*/
 static VALUE exporter_save_settings(VALUE obj, VALUE filepath)
 {
   FILE *file;

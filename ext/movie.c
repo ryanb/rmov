@@ -19,12 +19,30 @@ static void movie_mark(struct RMovie *rMovie)
 {
 }
 
+/*
+  Creates a new movie instance. Generally you want to go through 
+  Movie.open or Movie.empty to load or create a new movie respectively. 
+  If you do no then you will need to load the movie with load_empty or 
+  load_from_file before you can accomplish anything.
+
+call-seq:
+  new() -> movie
+*/
 static VALUE movie_new(VALUE klass)
 {
   struct RMovie *rMovie;
   return Data_Make_Struct(klass, struct RMovie, movie_mark, movie_free, rMovie);
 }
 
+/*
+  Dispose of the loaded QuickTime movie. This will automatically be done 
+  when this movie instance is garbage collected. However if you are 
+  iterating through many movies it is often helpful to dispose of it 
+  as soon as you're done with it.
+
+call-seq:
+  dispose()
+*/
 static VALUE movie_dispose(VALUE obj)
 {
   if (MOVIE(obj)) {
@@ -34,6 +52,14 @@ static VALUE movie_dispose(VALUE obj)
   return obj;
 }
 
+/*
+  Loads a new, empty QuickTime movie at given filepath. Should only be 
+  called if no movie has been loaded (or it has been disposed). Usually 
+  you go through Movie.open.
+
+call-seq:
+  load_from_file(filepath)
+*/
 static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
 {
   if (MOVIE(obj)) {
@@ -67,6 +93,14 @@ static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
   }
 }
 
+/*
+  Loads a new, empty QuickTime movie. Should only be called if no movie 
+  has been loaded (or it has been disposed). Usually you go through 
+  Movie.empty.
+
+call-seq:
+  load_empty()
+*/
 static VALUE movie_load_empty(VALUE obj)
 {
   if (MOVIE(obj)) {
@@ -77,16 +111,36 @@ static VALUE movie_load_empty(VALUE obj)
   }
 }
 
+/*
+  Returns the raw duration of the movie. Combine this with time_scale to 
+  reach the duration in seconds.
+
+call-seq:
+  raw_duration() -> duration_int
+*/
 static VALUE movie_raw_duration(VALUE obj)
 {
   return INT2NUM(GetMovieDuration(MOVIE(obj)));
 }
 
+/*
+  Returns the time scale of the movie. Usually only needed when working 
+  with raw_duration.
+
+call-seq:
+  time_scale() -> scale_int
+*/
 static VALUE movie_time_scale(VALUE obj)
 {
   return INT2NUM(GetMovieTimeScale(MOVIE(obj)));
 }
 
+/*
+  Returns the number of tracks in the movie.
+
+call-seq:
+  track_count() -> count
+*/
 static VALUE movie_bounds(VALUE obj)
 {
   VALUE bounds_hash = rb_hash_new();
@@ -99,11 +153,27 @@ static VALUE movie_bounds(VALUE obj)
   return bounds_hash;
 }
 
+/*
+  Returns the number of tracks in the movie.
+
+call-seq:
+  track_count -> count
+*/
 static VALUE movie_track_count(VALUE obj)
 {
   return INT2NUM(GetMovieTrackCount(MOVIE(obj)));
 }
 
+/*
+  Adds the tracks of given movie into called movie at given position (in seconds).
+  
+  You can track the progress of this operation by passing a block to this 
+  method. It will be called regularly during the process and pass the 
+  percentage complete (0.0 to 1.0) as an argument to the block.
+
+call-seq:
+  composite_movie(movie, position)
+*/
 static VALUE movie_composite_movie(VALUE obj, VALUE src, VALUE position)
 {
   if (rb_block_given_p())
@@ -118,6 +188,16 @@ static VALUE movie_composite_movie(VALUE obj, VALUE src, VALUE position)
   return obj;
 }
 
+/*
+  Inserts given movie into called movie at given position (in seconds).
+
+  You can track the progress of this operation by passing a block to this 
+  method. It will be called regularly during the process and pass the 
+  percentage complete (0.0 to 1.0) as an argument to the block.
+
+call-seq:
+  append_movie(movie, position)
+*/
 static VALUE movie_insert_movie(VALUE obj, VALUE src, VALUE position)
 {
   if (rb_block_given_p())
@@ -132,6 +212,16 @@ static VALUE movie_insert_movie(VALUE obj, VALUE src, VALUE position)
   return obj;
 }
 
+/*
+  Adds given movie to the end of movie which this method is called on.
+
+  You can track the progress of this operation by passing a block to this 
+  method. It will be called regularly during the process and pass the 
+  percentage complete (0.0 to 1.0) as an argument to the block.
+
+call-seq:
+  append_movie(movie)
+*/
 static VALUE movie_append_movie(VALUE obj, VALUE src)
 {
   if (rb_block_given_p())
@@ -146,6 +236,13 @@ static VALUE movie_append_movie(VALUE obj, VALUE src)
   return obj;
 }
 
+/*
+  Deletes given section from movie. Both start_time and duration 
+  should be floats representing seconds.
+
+call-seq:
+  delete_section(start_time, duration)
+*/
 static VALUE movie_delete_section(VALUE obj, VALUE start, VALUE duration)
 {
   SetMovieSelection(MOVIE(obj), MOVIE_TIME(obj, start), MOVIE_TIME(obj, duration));
@@ -153,6 +250,18 @@ static VALUE movie_delete_section(VALUE obj, VALUE start, VALUE duration)
   return obj;
 }
 
+/*
+  Returns a new movie in the given section. Does not modify original 
+  movie. Both start_time and duration should be floats representing 
+  seconds.
+
+  You can track the progress of this operation by passing a block to this 
+  method. It will be called regularly during the process and pass the 
+  percentage complete (0.0 to 1.0) as an argument to the block.
+
+call-seq:
+  clone_section(start_time, duration) -> movie
+*/
 static VALUE movie_clone_section(VALUE obj, VALUE start, VALUE duration)
 {
   VALUE new_movie_obj = rb_obj_alloc(cMovie);
@@ -169,6 +278,18 @@ static VALUE movie_clone_section(VALUE obj, VALUE start, VALUE duration)
   return new_movie_obj;
 }
 
+/*
+  Deletes given section on movie and returns a new movie with that 
+  section. Both start_time and duration should be floats representing 
+  seconds.
+
+  You can track the progress of this operation by passing a block to this 
+  method. It will be called regularly during the process and pass the 
+  percentage complete (0.0 to 1.0) as an argument to the block.
+
+call-seq:
+  clip_section(start_time, duration) -> movie
+*/
 static VALUE movie_clip_section(VALUE obj, VALUE start, VALUE duration)
 {
   VALUE new_movie_obj = rb_obj_alloc(cMovie);
@@ -185,6 +306,13 @@ static VALUE movie_clip_section(VALUE obj, VALUE start, VALUE duration)
   return new_movie_obj;
 }
 
+/*
+  Determine if a movie has changed since opening. Returns true/false. 
+  See reset_changed_status to reset this value.
+
+call-seq:
+  changed?() -> bool
+*/
 static VALUE movie_changed(VALUE obj)
 {
   if (HasMovieChanged(MOVIE(obj))) {
@@ -194,11 +322,25 @@ static VALUE movie_changed(VALUE obj)
   }
 }
 
+/*
+  Resets the "changed?" status. Does not revert the movie itself.
+
+call-seq:
+  clear_changed_status()
+*/
 static VALUE movie_clear_changed_status(VALUE obj)
 {
   ClearMovieChanged(MOVIE(obj));
   return Qnil;
 }
+
+
+/*
+  Saves the movie to the given filepath by flattening it.
+
+call-seq:
+  flatten(filepath)
+*/
 
 static VALUE movie_flatten(VALUE obj, VALUE filepath)
 {
@@ -219,6 +361,15 @@ static VALUE movie_flatten(VALUE obj, VALUE filepath)
                                   &fs, 'TVOD', smSystemScript, createMovieFileDontCreateResFile);
   return new_movie_obj;
 }
+
+/*
+  Exports a PICT file to given filepath (should end in .pct) at the given 
+  time. Time should be a floating point in seconds.
+
+call-seq:
+  export_pict(filepath, time)
+  
+*/
 
 static VALUE movie_export_pict(VALUE obj, VALUE filepath, VALUE frame_time)
 {

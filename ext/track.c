@@ -10,12 +10,26 @@ static void track_mark(struct RTrack *rTrack)
 {
 }
 
+/*
+  Creates a new track instance. Generally you will do this through 
+  movie.tracks to fetch the Track instances for a given movie.
+
+call-seq:
+  new() -> track
+*/
 static VALUE track_new(VALUE klass)
 {
   struct RTrack *rTrack;
   return Data_Make_Struct(klass, struct RTrack, track_mark, track_free, rTrack);
 }
 
+/*
+  Loads a QuickTime track from a given movie. This is done automatically 
+  when calling movie.tracks.
+
+call-seq:
+  load(movie, index)
+*/
 static VALUE track_load(VALUE obj, VALUE movie_obj, VALUE index_obj)
 {
   RTRACK(obj)->track = GetMovieIndTrack(MOVIE(movie_obj), NUM2INT(index_obj));
@@ -25,21 +39,47 @@ static VALUE track_load(VALUE obj, VALUE movie_obj, VALUE index_obj)
   return obj;
 }
 
+/*
+  Returns the raw duration of the track. Combine this with time_scale to 
+  reach the duration in seconds.
+
+call-seq:
+  raw_duration() -> duration_int
+*/
 static VALUE track_raw_duration(VALUE obj)
 {
   return INT2NUM(GetMediaDuration(TRACK_MEDIA(obj)));
 }
 
+/*
+  Returns the time scale of the track. Usually only needed when working 
+  with raw_duration.
+
+call-seq:
+  time_scale() -> scale_int
+*/
 static VALUE track_time_scale(VALUE obj)
 {
   return INT2NUM(GetMediaTimeScale(TRACK_MEDIA(obj)));
 }
 
+/*
+  Returns the number of frames in the track.
+
+call-seq:
+  frame_count() -> count
+*/
 static VALUE track_frame_count(VALUE obj)
 {
   return INT2NUM(GetMediaSampleCount(TRACK_MEDIA(obj)));
 }
 
+/*
+  Returns either :audio or :video depending on the type of track this is.
+
+call-seq:
+  media_type() -> media_type_sym
+*/
 static VALUE track_media_type(VALUE obj)
 {
   OSType media_type;
@@ -54,29 +94,60 @@ static VALUE track_media_type(VALUE obj)
   }
 }
 
+/*
+  Returns either id number QuickTime uses to reference this track. 
+  Usually only used internally.
+
+call-seq:
+  id() -> quicktime_track_id_int
+*/
 static VALUE track_id(VALUE obj)
 {
   return INT2NUM(GetTrackID(TRACK(obj)));
 }
 
+/*
+  Removes the track from its movie and deletes it from memory.
+
+call-seq:
+  delete()
+*/
 static VALUE track_delete(VALUE obj)
 {
   DisposeMovieTrack(TRACK(obj));
   return Qnil;
 }
 
+/*
+  Disables the track. See enabled? to determine if it's disabled already.
+
+call-seq:
+  disable()
+*/
 static VALUE track_disable(VALUE obj, VALUE boolean)
 {
   SetTrackEnabled(TRACK(obj), FALSE);
   return obj;
 }
 
+/*
+  Enables the track. See enabled? to determine if it's enabled already.
+
+call-seq:
+  enable()
+*/
 static VALUE track_enable(VALUE obj, VALUE boolean)
 {
   SetTrackEnabled(TRACK(obj), TRUE);
   return obj;
 }
 
+/*
+  Returns true/false depending on if the track is enabled.
+
+call-seq:
+  enabled?() -> bool
+*/
 static VALUE track_enabled(VALUE obj, VALUE boolean)
 {
   if (GetTrackEnabled(TRACK(obj)) == TRUE) {
