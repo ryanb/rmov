@@ -191,6 +191,8 @@ static VALUE exporter_save_settings(VALUE obj, VALUE filepath)
 
 void Init_quicktime_exporter()
 {
+  VALUE mQuicktime;
+  mQuicktime = rb_define_module("Quicktime");
   cExporter = rb_define_class_under(mQuicktime, "Exporter", rb_cObject);
   rb_define_alloc_func(cExporter, exporter_new);
   rb_define_method(cExporter, "export", exporter_export_to_file, 1);

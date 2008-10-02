@@ -1,7 +1,7 @@
 #include <ruby.h>
 #include <QuickTime/QuickTime.h>
 
-extern VALUE mQuicktime, eQuicktime, cMovie, cTrack, cExporter;
+extern VALUE eQuicktime, cMovie, cTrack, cExporter;
 
 /*** MOVIE ***/
 

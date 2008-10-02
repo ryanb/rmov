@@ -159,6 +159,8 @@ static VALUE track_enabled(VALUE obj, VALUE boolean)
 
 void Init_quicktime_track()
 {
+  VALUE mQuicktime;
+  mQuicktime = rb_define_module("Quicktime");
   cTrack = rb_define_class_under(mQuicktime, "Track", rb_cObject);
   rb_define_alloc_func(cTrack, track_new);
   rb_define_method(cTrack, "load_from_movie", track_load, 2);

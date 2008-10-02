@@ -1,11 +1,13 @@
 #include "rmov_ext.h"
 
-VALUE mQuicktime;
 VALUE eQuicktime;
 
 void Init_rmov_ext()
 {
+  VALUE mQuicktime;
+  
   EnterMovies(); // Enables the QuickTime framework
+  
   mQuicktime = rb_define_module("Quicktime");
   eQuicktime = rb_define_class_under(mQuicktime, "Error", rb_eStandardError);
   Init_quicktime_movie();

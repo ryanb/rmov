@@ -5,3 +5,4 @@ spec/output/*.mov
 spec/output/*.st
 spec/output/*.pct
 pkg
+doc

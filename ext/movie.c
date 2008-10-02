@@ -413,6 +413,8 @@ static VALUE movie_export_pict(VALUE obj, VALUE filepath, VALUE frame_time)
 
 void Init_quicktime_movie()
 {
+  VALUE mQuicktime;
+  mQuicktime = rb_define_module("Quicktime");
   cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
   rb_define_alloc_func(cMovie, movie_new);
   rb_define_method(cMovie, "load_from_file", movie_load_from_file, 1);
