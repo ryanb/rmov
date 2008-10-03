@@ -11,11 +11,10 @@ static void track_mark(struct RTrack *rTrack)
 }
 
 /*
+  call-seq: new() -> track
+  
   Creates a new track instance. Generally you will do this through 
   movie.tracks to fetch the Track instances for a given movie.
-
-call-seq:
-  new() -> track
 */
 static VALUE track_new(VALUE klass)
 {
@@ -24,11 +23,10 @@ static VALUE track_new(VALUE klass)
 }
 
 /*
+  call-seq: load(movie, index)
+  
   Loads a QuickTime track from a given movie. This is done automatically 
   when calling movie.tracks.
-
-call-seq:
-  load(movie, index)
 */
 static VALUE track_load(VALUE obj, VALUE movie_obj, VALUE index_obj)
 {
@@ -40,11 +38,10 @@ static VALUE track_load(VALUE obj, VALUE movie_obj, VALUE index_obj)
 }
 
 /*
+  call-seq: raw_duration() -> duration_int
+  
   Returns the raw duration of the track. Combine this with time_scale to 
   reach the duration in seconds.
-
-call-seq:
-  raw_duration() -> duration_int
 */
 static VALUE track_raw_duration(VALUE obj)
 {
@@ -52,11 +49,10 @@ static VALUE track_raw_duration(VALUE obj)
 }
 
 /*
+  call-seq: time_scale() -> scale_int
+  
   Returns the time scale of the track. Usually only needed when working 
   with raw_duration.
-
-call-seq:
-  time_scale() -> scale_int
 */
 static VALUE track_time_scale(VALUE obj)
 {
@@ -64,10 +60,9 @@ static VALUE track_time_scale(VALUE obj)
 }
 
 /*
+  call-seq: frame_count() -> count
+  
   Returns the number of frames in the track.
-
-call-seq:
-  frame_count() -> count
 */
 static VALUE track_frame_count(VALUE obj)
 {
@@ -75,10 +70,9 @@ static VALUE track_frame_count(VALUE obj)
 }
 
 /*
+  call-seq: media_type() -> media_type_sym
+  
   Returns either :audio or :video depending on the type of track this is.
-
-call-seq:
-  media_type() -> media_type_sym
 */
 static VALUE track_media_type(VALUE obj)
 {
@@ -95,11 +89,10 @@ static VALUE track_media_type(VALUE obj)
 }
 
 /*
+  call-seq: id() -> quicktime_track_id_int
+  
   Returns either id number QuickTime uses to reference this track. 
   Usually only used internally.
-
-call-seq:
-  id() -> quicktime_track_id_int
 */
 static VALUE track_id(VALUE obj)
 {
@@ -107,10 +100,9 @@ static VALUE track_id(VALUE obj)
 }
 
 /*
+  call-seq: delete()
+  
   Removes the track from its movie and deletes it from memory.
-
-call-seq:
-  delete()
 */
 static VALUE track_delete(VALUE obj)
 {
@@ -119,10 +111,9 @@ static VALUE track_delete(VALUE obj)
 }
 
 /*
+  call-seq: disable()
+  
   Disables the track. See enabled? to determine if it's disabled already.
-
-call-seq:
-  disable()
 */
 static VALUE track_disable(VALUE obj, VALUE boolean)
 {
@@ -131,10 +122,9 @@ static VALUE track_disable(VALUE obj, VALUE boolean)
 }
 
 /*
+  call-seq: enable()
+  
   Enables the track. See enabled? to determine if it's enabled already.
-
-call-seq:
-  enable()
 */
 static VALUE track_enable(VALUE obj, VALUE boolean)
 {
@@ -143,10 +133,9 @@ static VALUE track_enable(VALUE obj, VALUE boolean)
 }
 
 /*
+  call-seq: enabled?() -> bool
+  
   Returns true/false depending on if the track is enabled.
-
-call-seq:
-  enabled?() -> bool
 */
 static VALUE track_enabled(VALUE obj, VALUE boolean)
 {

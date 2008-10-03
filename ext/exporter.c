@@ -14,10 +14,9 @@ static void exporter_mark(struct RExporter *rExporter)
 }
 
 /*
+  call-seq: new(movie) -> exporter
+  
   Creates a new exporter instance. Usually this is done through movie.exporter.
-
-call-seq:
-  new(movie) -> exporter
 */
 static VALUE exporter_new(VALUE klass)
 {
@@ -35,15 +34,14 @@ static ComponentInstance exporter_component(VALUE obj)
 }
 
 /*
+  call-seq: export_to_file(filepath)
+  
   Exports a movie to the given filepath. This will use either the 
   settings you set beforehand, or QuickTime's defaults.
 
   You can track the progress of this operation by passing a block to this 
   method. It will be called regularly during the process and pass the 
   percentage complete (0.0 to 1.0) as an argument to the block.
-
-call-seq:
-  export_to_file(filepath)
 */
 static VALUE exporter_export_to_file(VALUE obj, VALUE filepath)
 {
@@ -76,14 +74,13 @@ static VALUE exporter_export_to_file(VALUE obj, VALUE filepath)
 }
 
 /*
+  call-seq: open_settings_dialog()
+  
   Opens the offical QuickTime GUI settings dialog. The process will be 
   suspended until the user closes the dialogue. If the user clicks Okay 
   the settings will be applied to this Exporter. You can then use 
   save_settings to save them to a file, and load_settings to load them 
   back again.
-
-call-seq:
-  open_settings_dialog()
 */
 static VALUE exporter_open_settings_dialog(VALUE obj)
 {
@@ -126,10 +123,9 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
 }
 
 /*
+  call-seq: load_settings(filepath)
+  
   Loads the settings at the given filepath. See save_settings.
-
-call-seq:
-  load_settings(filepath)
 */
 static VALUE exporter_load_settings(VALUE obj, VALUE filepath)
 {
@@ -164,11 +160,10 @@ static VALUE exporter_load_settings(VALUE obj, VALUE filepath)
 }
 
 /*
+  call-seq: save_settings(filepath)
+  
   Saves the settings to the given filepath (usually with .st extension). 
   See open_settings_dialog and load_settings.
-
-call-seq:
-  save_settings(filepath)
 */
 static VALUE exporter_save_settings(VALUE obj, VALUE filepath)
 {

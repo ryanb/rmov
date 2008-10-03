@@ -1,3 +1,5 @@
+* fixing inline RDocs so call sequence is handled properly
+
 0.1.0 (October 2nd, 2008)
 
 * initial release
