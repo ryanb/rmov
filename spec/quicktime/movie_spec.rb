@@ -152,5 +152,25 @@ describe QuickTime::Movie do
       lambda { @movie.load_empty }.should raise_error(QuickTime::Error)
       lambda { @movie.load_from_file('example.mov') }.should raise_error(QuickTime::Error)
     end
+    
+    it "should be able to create a new track" do
+      track = @movie.new_track(300, 500)
+      track.should be_kind_of(QuickTime::Track)
+      @movie.tracks.should have(1).record
+    end
+    
+    it "should be able to create a new video track" do
+      track = @movie.new_video_track(300, 500)
+      track.should be_kind_of(QuickTime::Track)
+      track.should be_video
+      @movie.video_tracks.should have(1).record
+    end
+    
+    it "should be able to create a new audio track" do
+      track = @movie.new_audio_track(300, 500)
+      track.should be_kind_of(QuickTime::Track)
+      track.should be_audio
+      @movie.audio_tracks.should have(1).record
+    end
   end
 end

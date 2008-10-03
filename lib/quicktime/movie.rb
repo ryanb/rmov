@@ -53,5 +53,19 @@ module QuickTime
     def export(*args, &block)
       exporter.export(*args, &block)
     end
+    
+    # Creates a new video track with given width/height on movie and returns it.
+    def new_video_track(width, height)
+      track = new_track(width, height)
+      track.new_video_media
+      track
+    end
+    
+    # Creates a new audio track with given width/height on movie and returns it.
+    def new_audio_track(width, height)
+      track = new_track(width, height)
+      track.new_audio_media
+      track
+    end
   end
 end

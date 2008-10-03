@@ -1,4 +1,6 @@
-* changing Quicktime module name to QuickTime.
+* adding movie.new_video_track and movie.new_audio_track methods for creating new tracks
+
+* changing Quicktime module name to QuickTime to match proper casing
 
 0.1.2 (October 3rd, 2008)
 

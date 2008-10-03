@@ -188,6 +188,33 @@ static VALUE track_set_offset(VALUE obj, VALUE seconds)
   return Qnil;
 }
 
+/*
+  call-seq: new_video_media
+  
+  Creates a new video media for this track.
+  
+  Generally this method is not called directly, instead you can make a 
+  new video track using Movie#new_video_track.
+*/
+static VALUE track_new_video_media(VALUE obj)
+{
+  NewTrackMedia(TRACK(obj), VideoMediaType, 600, 0, 0);
+  return obj;
+}
+
+/*
+  call-seq: new_audio_media
+  
+  Creates a new audio media for this track.
+  
+  Generally this method is not called directly, instead you can make a 
+  new audio track using Movie#new_audio_track.
+*/
+static VALUE track_new_audio_media(VALUE obj)
+{
+  NewTrackMedia(TRACK(obj), SoundMediaType, 44100, 0, 0);
+  return obj;
+}
 
 void Init_quicktime_track()
 {
@@ -209,4 +236,6 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "volume=", track_set_volume, 1);
   rb_define_method(cTrack, "offset", track_get_offset, 0);
   rb_define_method(cTrack, "offset=", track_set_offset, 1);
+  rb_define_method(cTrack, "new_video_media", track_new_video_media, 0);
+  rb_define_method(cTrack, "new_audio_media", track_new_audio_media, 0);
 }

@@ -413,6 +413,22 @@ static VALUE movie_set_poster_time(VALUE obj, VALUE seconds)
   return Qnil;
 }
 
+/*
+  call-seq: new_track(width, height) -> track
+  
+  Creates a new track with the given width/height on the movie and returns it.
+  
+  This method is generally not called directly. Instead you should call 
+  new_video_track or new_audio_track. If you call method make sure to 
+  call new_media on track to setup the media.
+*/
+static VALUE movie_new_track(VALUE obj, VALUE width, VALUE height)
+{
+  VALUE track_obj = rb_obj_alloc(cTrack);
+  RTRACK(track_obj)->track = NewMovieTrack(MOVIE(obj), NUM2INT(width), NUM2INT(height), kFullVolume);
+  return track_obj;
+}
+
 void Init_quicktime_movie()
 {
   VALUE mQuickTime;
@@ -438,4 +454,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "dispose", movie_dispose, 0);
   rb_define_method(cMovie, "poster_time", movie_get_poster_time, 0);
   rb_define_method(cMovie, "poster_time=", movie_set_poster_time, 1);
+  rb_define_method(cMovie, "new_track", movie_new_track, 2);
 }
