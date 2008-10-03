@@ -146,6 +146,28 @@ static VALUE track_enabled(VALUE obj, VALUE boolean)
   }
 }
 
+/*
+  call-seq: volume() -> volume_float
+  
+  Returns the volume of the audio from 0.0 to 1.0.
+*/
+static VALUE track_get_volume(VALUE obj)
+{
+  return rb_float_new((double)GetTrackVolume(TRACK(obj))/0x0100);
+}
+
+/*
+  call-seq: volume=(volume_float)
+  
+  Sets the volume to the given value (0.0 to 1.0)
+*/
+static VALUE track_set_volume(VALUE obj, VALUE volume_obj)
+{
+  SetTrackVolume(TRACK(obj), (short)(0x0100*NUM2DBL(volume_obj)));
+  return Qnil;
+}
+
+
 void Init_quicktime_track()
 {
   VALUE mQuicktime;
@@ -162,4 +184,6 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "enabled?", track_enabled, 0);
   rb_define_method(cTrack, "enable", track_enable, 0);
   rb_define_method(cTrack, "disable", track_disable, 0);
+  rb_define_method(cTrack, "volume", track_get_volume, 0);
+  rb_define_method(cTrack, "volume=", track_set_volume, 1);
 }
