@@ -1,0 +1,73 @@
+= RMov
+
+Open, edit, and export QuickTime movies all within Ruby! This is an 
+unofficial wrapper around Apple's QuickTime C API. Mac OS X required.
+
+
+== Install
+
+Install the gem:
+
+  gem install rmov
+
+And then load it in your project:
+
+  require 'rmov'
+
+
+== Usage
+
+Use this gem to open QuickTime movies and edit them to your liking.
+
+  movie1 = QuickTime::Movie.open("path/to/movie.mov")
+  movie2 = QuickTime::Movie.open("path/to/another_movie.mov")
+  
+  # add movie2 to the end of movie1
+  movie1.append_movie(movie2)
+  
+  # make a new movie out of a section of movie 1
+  # this will delete 5 seconds out of the movie at 2 seconds in
+  movie3 = movie1.clip_section(movie1, 2, 5)
+  
+  # You can insert that part back into the movie at 8 seconds in
+  movie1.insert_movie(movie3, 8)
+
+Now you can export the movie. Usually this is done through a user 
+interface the first time around. The settings can then be saved to
+a file. After that you can load these settings without interfering
+the user with the dialog again.
+
+  exporter = movie1.exporter
+  
+  # if we already have saved the settings, load those
+  if File.exist? "settings.st"
+    exporter.load_settings("settings.st")
+  else
+    # otherwise open the QuickTime GUI settings dialog
+    exporter.open_settings_dialog
+    
+    # save settings to a file so we don't have to bother user next time
+    exporter.save_settings("settings.st")
+  end
+  
+  # export the movie to a file and report the progress along the way
+  exporter.export("movie.mov") do |progress|
+    percent = (progress*100).round
+    puts "#{percent}% complete"
+  end
+
+See Quicktime::Movie in the RDoc for more information.
+
+http://rmov.rubyforge.org
+
+
+== Development
+
+This project can be found on github at the following URL.
+
+http://github.com/ryanb/rmov
+
+If you find a bug, please send me a message on GitHub.
+
+If you would like to contribute to this project, please fork the 
+repository and send me a pull request.
