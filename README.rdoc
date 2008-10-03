@@ -27,7 +27,7 @@ Use this gem to open QuickTime movies and edit them to your liking.
   
   # make a new movie out of a section of movie 1
   # this will delete 5 seconds out of the movie at 2 seconds in
-  movie3 = movie1.clip_section(movie1, 2, 5)
+  movie3 = movie1.clip_section(2, 5)
   
   # You can insert that part back into the movie at 8 seconds in
   movie1.insert_movie(movie3, 8)
