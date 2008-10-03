@@ -1,3 +1,5 @@
+0.1.4 (October 3rd, 2008)
+
 * adding support for several export_image formats (PNG, JPEG, TIFF, TGA, BMP, PSD)
 
 * adding movie.export_image as a generic way to export a frame to multiple formats
