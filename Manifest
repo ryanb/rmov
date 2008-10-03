@@ -10,8 +10,9 @@ lib/quicktime/movie.rb
 lib/quicktime/track.rb
 lib/rmov.rb
 LICENSE
+Manifest
 Rakefile
-README
+README.rdoc
 spec/fixtures/settings.st
 spec/output/example.pct
 spec/output/saved_settings.st
@@ -23,4 +24,3 @@ spec/spec_helper.rb
 tasks/setup.rake
 tasks/spec.rake
 TODO
-Manifest
