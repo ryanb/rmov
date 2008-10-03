@@ -40,6 +40,15 @@ describe Quicktime::Track do
         @track.enable
         @track.should be_enabled
       end
+    
+      it "should have no offset" do
+        @track.offset.should == 0
+      end
+    
+      it "should be able to offset by 2.5 seconds" do
+        @track.offset = 2.5
+        @track.offset.should == 2.5
+      end
     end
   
     describe "example.mov audio track" do

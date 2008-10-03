@@ -167,6 +167,27 @@ static VALUE track_set_volume(VALUE obj, VALUE volume_obj)
   return Qnil;
 }
 
+/*
+  call-seq: offset() -> seconds
+  
+  Returns the offset of the track from the beginning of the movie (in seconds).
+*/
+static VALUE track_get_offset(VALUE obj)
+{
+  return rb_float_new((double)GetTrackOffset(TRACK(obj))/GetMediaTimeScale(TRACK_MEDIA(obj)));
+}
+
+/*
+  call-seq: offset=(seconds)
+  
+  Sets the offset of the track from the start of the movie (in seconds).
+*/
+static VALUE track_set_offset(VALUE obj, VALUE seconds)
+{
+  SetTrackOffset(TRACK(obj), TRACK_TIME(obj, seconds));
+  return Qnil;
+}
+
 
 void Init_quicktime_track()
 {
@@ -186,4 +207,6 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "disable", track_disable, 0);
   rb_define_method(cTrack, "volume", track_get_volume, 0);
   rb_define_method(cTrack, "volume=", track_set_volume, 1);
+  rb_define_method(cTrack, "offset", track_get_offset, 0);
+  rb_define_method(cTrack, "offset=", track_set_offset, 1);
 }
