@@ -87,10 +87,10 @@ module QuickTime
     def export_image(filepath, seconds)
       # TODO support more file types
       type = case File.extname(filepath).downcase
-        when '.pct'          then 'PICT'
-        when '.png'          then 'PNGf'
+        when '.pct', '.pict' then 'PICT'
         when '.tif', '.tiff' then 'TIFF'
         when '.jpg', '.jpeg' then 'JPEG'
+        when '.png'          then 'PNGf'
         when '.tga'          then 'TPIC'
         when '.bmp'          then 'BMPf'
         when '.psd'          then '8BPS'
