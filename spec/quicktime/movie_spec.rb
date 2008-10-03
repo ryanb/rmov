@@ -123,6 +123,12 @@ describe QuickTime::Movie do
       @movie.export_pict(path, 1.2)
     end
     
+    it "export_png should output a png file at a given duration" do
+      path = File.dirname(__FILE__) + '/../output/example.png'
+      File.delete(path) rescue nil
+      @movie.export_png(path, 1.2)
+    end
+    
     it "should default poster time to 0" do
       @movie.poster_time.should == 0
     end

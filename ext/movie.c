@@ -393,6 +393,54 @@ static VALUE movie_export_pict(VALUE obj, VALUE filepath, VALUE frame_time)
 }
 
 /*
+  call-seq: export_png(filepath, time)
+  
+  Exports a PNG file to given filepath (should end in .png) at the given 
+  time. Time should be a floating point in seconds.
+*/
+
+static VALUE movie_export_png(VALUE obj, VALUE filepath, VALUE frame_time)
+{
+  // TODO refactor out duplication with export_pict
+  GraphicsImportComponent component;
+  PicHandle picture;
+  Handle handle;
+  FSSpec fs;
+  OSErr err;
+  
+  picture = GetMoviePict(MOVIE(obj), MOVIE_TIME(obj, frame_time));
+  
+  err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
+  if (err != fnfErr)
+    rb_raise(eQuickTime, "Error %d occurred while opening file for export at %s.", err, RSTRING(filepath)->ptr);
+  
+  // Convert the picture handle into a PICT file (still in a handle)
+  // by adding a 512-byte header to the start.
+  handle = NewHandleClear(512);
+  err = HandAndHand((Handle)picture, handle);
+  if (err != noErr)
+    rb_raise(eQuickTime, "Error %d occurred while converting handle for pict export %s.", err, RSTRING(filepath)->ptr);
+  
+  err = OpenADefaultComponent(GraphicsImporterComponentType, kQTFileTypePicture, &component);
+  if (err != noErr)
+    rb_raise(eQuickTime, "Error %d occurred while opening picture component for %s.", err, RSTRING(filepath)->ptr);
+  
+  err = GraphicsImportSetDataHandle(component, handle);
+  if (err != noErr)
+    rb_raise(eQuickTime, "Error %d occurred while setting graphics importer data handle for %s.", err, RSTRING(filepath)->ptr);
+  
+  err = GraphicsImportExportImageFile(component, 'PNGf', 0, &fs, smSystemScript);
+  if (err != noErr)
+    rb_raise(eQuickTime, "Error %d occurred while exporting pict to file %s.", err, RSTRING(filepath)->ptr);
+  
+  CloseComponent(component);
+  DisposeHandle(handle);
+  DisposeHandle((Handle)picture);
+  
+  return Qnil;
+}
+
+/*
   call-seq: poster_time() -> seconds
   
   Returns the poster time of the movie (in seconds).
@@ -451,6 +499,7 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "clear_changed_status", movie_clear_changed_status, 0);
   rb_define_method(cMovie, "flatten", movie_flatten, 1);
   rb_define_method(cMovie, "export_pict", movie_export_pict, 2);
+  rb_define_method(cMovie, "export_png", movie_export_png, 2);
   rb_define_method(cMovie, "dispose", movie_dispose, 0);
   rb_define_method(cMovie, "poster_time", movie_get_poster_time, 0);
   rb_define_method(cMovie, "poster_time=", movie_set_poster_time, 1);
