@@ -91,11 +91,9 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
   ComponentInstance component = exporter_component(obj);
   
   // Bring this process to the front
-  if (!IsProcessVisible(&current_process)) {
-    err = TransformProcessType(&current_process, kProcessTransformToForegroundApplication);
-    if (err != noErr) {
-      rb_raise(eQuicktime, "Error %d occurred while brining this application to the forground.", err);
-    }
+  err = TransformProcessType(&current_process, kProcessTransformToForegroundApplication);
+  if (err != noErr) {
+    rb_raise(eQuicktime, "Error %d occurred while brining this application to the forground.", err);
   }
   SetFrontProcess(&current_process);
   
