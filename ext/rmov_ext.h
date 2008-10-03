@@ -3,6 +3,9 @@
 
 extern VALUE eQuickTime, cMovie, cTrack, cExporter;
 
+
+#define OSTYPE(str) ((str[0] << 24) | (str[1] << 16) | (str[2] << 8) | str[3])
+
 /*** MOVIE ***/
 
 void Init_quicktime_movie();

@@ -79,5 +79,19 @@ module QuickTime
       track.new_text_media
       track
     end
+    
+    # Exports a frame of the movie at the given time (in seconds) to the given file. 
+    # The image format is automatically determined from the file extension. If this
+    # cannot be determined from the extension then you can use export_image_type to
+    # specify the ostype manually.
+    def export_image(filepath, seconds)
+      # TODO support more file types
+      type = case File.extname(filepath)
+        when '.pct' then 'PICT'
+        when '.png' then 'PNGf'
+        else raise QuickTime::Error, "Unable to guess ostype from file extension of #{filepath}"
+      end
+      export_image_type(filepath, seconds, type)
+    end
   end
 end

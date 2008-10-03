@@ -4,5 +4,6 @@ Makefile
 spec/output/*.mov
 spec/output/*.st
 spec/output/*.pct
+spec/output/*.png
 pkg
 doc
