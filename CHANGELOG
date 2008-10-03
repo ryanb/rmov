@@ -1,4 +1,4 @@
-* adding PNG image format to export_image
+* adding support for several export_image formats (PNG, JPEG, TIFF, TGA, BMP, PSD)
 
 * adding movie.export_image as a generic way to export a frame to multiple formats
 

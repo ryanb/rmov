@@ -86,9 +86,14 @@ module QuickTime
     # specify the ostype manually.
     def export_image(filepath, seconds)
       # TODO support more file types
-      type = case File.extname(filepath)
-        when '.pct' then 'PICT'
-        when '.png' then 'PNGf'
+      type = case File.extname(filepath).downcase
+        when '.pct'          then 'PICT'
+        when '.png'          then 'PNGf'
+        when '.tif', '.tiff' then 'TIFF'
+        when '.jpg', '.jpeg' then 'JPEG'
+        when '.tga'          then 'TPIC'
+        when '.bmp'          then 'BMPf'
+        when '.psd'          then '8BPS'
         else raise QuickTime::Error, "Unable to guess ostype from file extension of #{filepath}"
       end
       export_image_type(filepath, seconds, type)
