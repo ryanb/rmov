@@ -83,6 +83,8 @@ static VALUE track_media_type(VALUE obj)
     return ID2SYM(rb_intern("audio"));
   } else if (media_type == VideoMediaType) {
     return ID2SYM(rb_intern("video"));
+  } else if (media_type == TextMediaType) {
+    return ID2SYM(rb_intern("text"));
   } else {
     return Qnil;
   }
@@ -216,6 +218,20 @@ static VALUE track_new_audio_media(VALUE obj)
   return obj;
 }
 
+/*
+  call-seq: new_text_media
+  
+  Creates a new text media for this track.
+  
+  Generally this method is not called directly, instead you can make a 
+  new text track using Movie#new_text_track.
+*/
+static VALUE track_new_text_media(VALUE obj)
+{
+  NewTrackMedia(TRACK(obj), TextMediaType, 600, 0, 0);
+  return obj;
+}
+
 void Init_quicktime_track()
 {
   VALUE mQuickTime;
@@ -238,4 +254,5 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "offset=", track_set_offset, 1);
   rb_define_method(cTrack, "new_video_media", track_new_video_media, 0);
   rb_define_method(cTrack, "new_audio_media", track_new_audio_media, 0);
+  rb_define_method(cTrack, "new_text_media", track_new_text_media, 0);
 }

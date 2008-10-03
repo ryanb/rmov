@@ -44,6 +44,11 @@ module QuickTime
       tracks.select { |t| t.video? }
     end
     
+    # Returns an array of text tracks in this movie.
+    def text_tracks
+      tracks.select { |t| t.text? }
+    end
+    
     # Returns an Exporter instance for this movie.
     def exporter
       Exporter.new(self)
@@ -65,6 +70,13 @@ module QuickTime
     def new_audio_track(width, height)
       track = new_track(width, height)
       track.new_audio_media
+      track
+    end
+    
+    # Creates a new text track with given width/height on movie and returns it.
+    def new_text_track(width, height)
+      track = new_track(width, height)
+      track.new_text_media
       track
     end
   end

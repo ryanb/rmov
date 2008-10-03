@@ -172,5 +172,12 @@ describe QuickTime::Movie do
       track.should be_audio
       @movie.audio_tracks.should have(1).record
     end
+    
+    it "should be able to create a new text track" do
+      track = @movie.new_text_track(300, 500)
+      track.should be_kind_of(QuickTime::Track)
+      track.should be_text
+      @movie.text_tracks.should have(1).record
+    end
   end
 end

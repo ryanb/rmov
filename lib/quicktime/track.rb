@@ -21,5 +21,10 @@ module QuickTime
     def video?
       media_type == :video
     end
+    
+    # Returns true/false depending on if track is a text track.
+    def text?
+      media_type == :text
+    end
   end
 end
