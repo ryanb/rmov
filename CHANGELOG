@@ -1,4 +1,6 @@
-* track.offset and track.offset=(seconds) for getting and setting a track's offset time from the start of a movie.
+* movie.poster_time and movie.poster_time=(seconds) for getting and setting a movie's poster time
+
+* track.offset and track.offset=(seconds) for getting and setting a track's offset time from the start of a movie
 
 * track.volume and track.volume=(vol) for getting and setting a track's volume
 

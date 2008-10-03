@@ -122,6 +122,15 @@ describe Quicktime::Movie do
       File.delete(path) rescue nil
       @movie.export_pict(path, 1.2)
     end
+    
+    it "should default poster time to 0" do
+      @movie.poster_time.should == 0
+    end
+    
+    it "should be able to set poster time  to 2.1 seconds in" do
+      @movie.poster_time = 2.1
+      @movie.poster_time.should == 2.1
+    end
   end
   
   describe "empty movie" do

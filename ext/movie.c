@@ -392,6 +392,27 @@ static VALUE movie_export_pict(VALUE obj, VALUE filepath, VALUE frame_time)
   return Qnil;
 }
 
+/*
+  call-seq: poster_time() -> seconds
+  
+  Returns the poster time of the movie (in seconds).
+*/
+static VALUE movie_get_poster_time(VALUE obj)
+{
+  return rb_float_new((double)GetMoviePosterTime(MOVIE(obj))/GetMovieTimeScale(MOVIE(obj)));
+}
+
+/*
+  call-seq: poster_time=(seconds)
+  
+  Sets the poster_time of the movie (in seconds).
+*/
+static VALUE movie_set_poster_time(VALUE obj, VALUE seconds)
+{
+  SetMoviePosterTime(MOVIE(obj), MOVIE_TIME(obj, seconds));
+  return Qnil;
+}
+
 void Init_quicktime_movie()
 {
   VALUE mQuicktime;
@@ -415,4 +436,6 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "flatten", movie_flatten, 1);
   rb_define_method(cMovie, "export_pict", movie_export_pict, 2);
   rb_define_method(cMovie, "dispose", movie_dispose, 0);
+  rb_define_method(cMovie, "poster_time", movie_get_poster_time, 0);
+  rb_define_method(cMovie, "poster_time=", movie_set_poster_time, 1);
 }
