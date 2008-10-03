@@ -1,4 +1,4 @@
-module Quicktime
+module QuickTime
   # see ext/track.c for additional methods
   class Track
     # Returns the length of this track in seconds

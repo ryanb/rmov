@@ -56,7 +56,7 @@ the user with the dialog again.
     puts "#{percent}% complete"
   end
 
-See Quicktime::Movie in the RDoc for more information.
+See QuickTime::Movie in the RDoc for more information.
 
 http://rmov.rubyforge.org
 

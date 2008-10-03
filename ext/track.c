@@ -32,7 +32,7 @@ static VALUE track_load(VALUE obj, VALUE movie_obj, VALUE index_obj)
 {
   RTRACK(obj)->track = GetMovieIndTrack(MOVIE(movie_obj), NUM2INT(index_obj));
   if (!RTRACK(obj)->track)
-    rb_raise(eQuicktime, "Unable to fetch track for movie at index %d", NUM2INT(index_obj));
+    rb_raise(eQuickTime, "Unable to fetch track for movie at index %d", NUM2INT(index_obj));
   
   return obj;
 }
@@ -191,9 +191,9 @@ static VALUE track_set_offset(VALUE obj, VALUE seconds)
 
 void Init_quicktime_track()
 {
-  VALUE mQuicktime;
-  mQuicktime = rb_define_module("Quicktime");
-  cTrack = rb_define_class_under(mQuicktime, "Track", rb_cObject);
+  VALUE mQuickTime;
+  mQuickTime = rb_define_module("QuickTime");
+  cTrack = rb_define_class_under(mQuickTime, "Track", rb_cObject);
   rb_define_alloc_func(cTrack, track_new);
   rb_define_method(cTrack, "load_from_movie", track_load, 2);
   rb_define_method(cTrack, "raw_duration", track_raw_duration, 0);

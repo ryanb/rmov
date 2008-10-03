@@ -1,4 +1,4 @@
 require 'mkmf'
 
-$LDFLAGS = '-framework Quicktime'
+$LDFLAGS = '-framework QuickTime'
 create_makefile('rmov_ext')

@@ -1,15 +1,15 @@
 #include "rmov_ext.h"
 
-VALUE eQuicktime;
+VALUE eQuickTime;
 
 void Init_rmov_ext()
 {
-  VALUE mQuicktime;
+  VALUE mQuickTime;
   
   EnterMovies(); // Enables the QuickTime framework
   
-  mQuicktime = rb_define_module("Quicktime");
-  eQuicktime = rb_define_class_under(mQuicktime, "Error", rb_eStandardError);
+  mQuickTime = rb_define_module("QuickTime");
+  eQuickTime = rb_define_class_under(mQuickTime, "Error", rb_eStandardError);
   Init_quicktime_movie();
   Init_quicktime_track();
   Init_quicktime_exporter();

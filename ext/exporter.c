@@ -58,12 +58,12 @@ static VALUE exporter_export_to_file(VALUE obj, VALUE filepath)
   
   err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
   if (err != fnfErr)
-    rb_raise(eQuicktime, "Error %d occurred while opening file for export at %s.", err, RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Error %d occurred while opening file for export at %s.", err, RSTRING(filepath)->ptr);
   
   // TODO use exporter settings when converting movie
   err = ConvertMovieToFile(movie, 0, &fs, 'MooV', 'TVOD', 0, 0, 0, component);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error %d occurred while attempting to export movie to file %s.", err, RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Error %d occurred while attempting to export movie to file %s.", err, RSTRING(filepath)->ptr);
   
   if (rb_block_given_p())
     SetMovieProgressProc(movie, 0, 0);
@@ -93,14 +93,14 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
   // Bring this process to the front
   err = TransformProcessType(&current_process, kProcessTransformToForegroundApplication);
   if (err != noErr) {
-    rb_raise(eQuicktime, "Error %d occurred while brining this application to the forground.", err);
+    rb_raise(eQuickTime, "Error %d occurred while brining this application to the forground.", err);
   }
   SetFrontProcess(&current_process);
   
   // Show export dialog and save settings
   err = MovieExportDoUserDialog(component, movie, 0, 0, GetMovieDuration(movie), &canceled);
   if (err != noErr) {
-    rb_raise(eQuicktime, "Error %d occurred while opening export dialog.", err);
+    rb_raise(eQuickTime, "Error %d occurred while opening export dialog.", err);
   }
   
   if (!canceled) {
@@ -132,7 +132,7 @@ static VALUE exporter_load_settings(VALUE obj, VALUE filepath)
   
   file = fopen(RSTRING(filepath)->ptr, "r+b");
   if (!file) {
-    rb_raise(eQuicktime, "Unable to open file for loading at %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Unable to open file for loading at %s.", RSTRING(filepath)->ptr);
   }
   
   // obtain file size:
@@ -149,7 +149,7 @@ static VALUE exporter_load_settings(VALUE obj, VALUE filepath)
   REXPORTER(obj)->settings = (QTAtomContainer)NewHandleClear(length);
   read_length = fread(*(Handle)REXPORTER(obj)->settings, 1, length, file);
   if (read_length != length) {
-    rb_raise(eQuicktime, "Unable to read entire file at %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Unable to read entire file at %s.", RSTRING(filepath)->ptr);
   }
   
   fclose(file);
@@ -169,12 +169,12 @@ static VALUE exporter_save_settings(VALUE obj, VALUE filepath)
   QTAtomContainer settings = REXPORTER(obj)->settings;
   
   if (!settings) {
-    rb_raise(eQuicktime, "Unable to save settings because no settings are specified.");
+    rb_raise(eQuickTime, "Unable to save settings because no settings are specified.");
   }
   
   file = fopen(RSTRING(filepath)->ptr, "wb");
   if (!file) {
-    rb_raise(eQuicktime, "Unable to open file for saving at %s.", RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Unable to open file for saving at %s.", RSTRING(filepath)->ptr);
   }
   fwrite(&settings, GetHandleSize((Handle)settings), 1, file);
   fclose(file);
@@ -184,9 +184,9 @@ static VALUE exporter_save_settings(VALUE obj, VALUE filepath)
 
 void Init_quicktime_exporter()
 {
-  VALUE mQuicktime;
-  mQuicktime = rb_define_module("Quicktime");
-  cExporter = rb_define_class_under(mQuicktime, "Exporter", rb_cObject);
+  VALUE mQuickTime;
+  mQuickTime = rb_define_module("QuickTime");
+  cExporter = rb_define_class_under(mQuickTime, "Exporter", rb_cObject);
   rb_define_alloc_func(cExporter, exporter_new);
   rb_define_method(cExporter, "export", exporter_export_to_file, 1);
   rb_define_method(cExporter, "open_settings_dialog", exporter_open_settings_dialog, 0);

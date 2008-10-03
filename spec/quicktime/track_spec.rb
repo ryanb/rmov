@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
-describe Quicktime::Track do
+describe QuickTime::Track do
   describe "example.mov" do
     before(:each) do
-      @movie = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      @movie = QuickTime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
     end
   
     describe "example.mov video track" do

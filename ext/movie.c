@@ -60,7 +60,7 @@ static VALUE movie_dispose(VALUE obj)
 static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
 {
   if (MOVIE(obj)) {
-    rb_raise(eQuicktime, "Movie has already been loaded.");
+    rb_raise(eQuickTime, "Movie has already been loaded.");
   } else {
     OSErr err;
     FSSpec fs;
@@ -70,19 +70,19 @@ static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
     
     err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
     if (err != 0)
-      rb_raise(eQuicktime, "Error %d occurred while reading file at %s", err, RSTRING(filepath)->ptr);
+      rb_raise(eQuickTime, "Error %d occurred while reading file at %s", err, RSTRING(filepath)->ptr);
     
     err = OpenMovieFile(&fs, &frefnum, fsRdPerm);
     if (err != 0)
-      rb_raise(eQuicktime, "Error %d occurred while opening movie at %s", err, RSTRING(filepath)->ptr);
+      rb_raise(eQuickTime, "Error %d occurred while opening movie at %s", err, RSTRING(filepath)->ptr);
     
     err = NewMovieFromFile(movie, frefnum, &movie_resid, 0, newMovieActive, 0);
     if (err != 0)
-      rb_raise(eQuicktime, "Error %d occurred while loading movie at %s", err, RSTRING(filepath)->ptr);
+      rb_raise(eQuickTime, "Error %d occurred while loading movie at %s", err, RSTRING(filepath)->ptr);
     
     err = CloseMovieFile(frefnum);
     if (err != 0)
-      rb_raise(eQuicktime, "Error %d occurred while closing movie file at %s", err, RSTRING(filepath)->ptr);
+      rb_raise(eQuickTime, "Error %d occurred while closing movie file at %s", err, RSTRING(filepath)->ptr);
     
     RMOVIE(obj)->movie = *movie;
     
@@ -100,7 +100,7 @@ static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
 static VALUE movie_load_empty(VALUE obj)
 {
   if (MOVIE(obj)) {
-    rb_raise(eQuicktime, "Movie has already been loaded.");
+    rb_raise(eQuickTime, "Movie has already been loaded.");
   } else {
     RMOVIE(obj)->movie = NewMovie(0);
     return obj; 
@@ -333,7 +333,7 @@ static VALUE movie_flatten(VALUE obj, VALUE filepath)
   
   err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
   if (err != fnfErr)
-    rb_raise(eQuicktime, "Error %d occurred while opening file for export at %s", err, RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Error %d occurred while opening file for export at %s", err, RSTRING(filepath)->ptr);
   
   // TODO make these flags settable through an options hash
   RMOVIE(new_movie_obj)->movie = FlattenMovieData(MOVIE(obj),
@@ -364,26 +364,26 @@ static VALUE movie_export_pict(VALUE obj, VALUE filepath, VALUE frame_time)
   
   err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
   if (err != fnfErr)
-    rb_raise(eQuicktime, "Error %d occurred while opening file for export at %s.", err, RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Error %d occurred while opening file for export at %s.", err, RSTRING(filepath)->ptr);
   
   // Convert the picture handle into a PICT file (still in a handle)
   // by adding a 512-byte header to the start.
   handle = NewHandleClear(512);
   err = HandAndHand((Handle)picture, handle);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error %d occurred while converting handle for pict export %s.", err, RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Error %d occurred while converting handle for pict export %s.", err, RSTRING(filepath)->ptr);
   
   err = OpenADefaultComponent(GraphicsImporterComponentType, kQTFileTypePicture, &component);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error %d occurred while opening picture component for %s.", err, RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Error %d occurred while opening picture component for %s.", err, RSTRING(filepath)->ptr);
   
   err = GraphicsImportSetDataHandle(component, handle);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error %d occurred while setting graphics importer data handle for %s.", err, RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Error %d occurred while setting graphics importer data handle for %s.", err, RSTRING(filepath)->ptr);
   
   err = GraphicsImportExportImageFile(component, 0, 0, &fs, smSystemScript);
   if (err != noErr)
-    rb_raise(eQuicktime, "Error %d occurred while exporting pict to file %s.", err, RSTRING(filepath)->ptr);
+    rb_raise(eQuickTime, "Error %d occurred while exporting pict to file %s.", err, RSTRING(filepath)->ptr);
   
   CloseComponent(component);
   DisposeHandle(handle);
@@ -415,9 +415,9 @@ static VALUE movie_set_poster_time(VALUE obj, VALUE seconds)
 
 void Init_quicktime_movie()
 {
-  VALUE mQuicktime;
-  mQuicktime = rb_define_module("Quicktime");
-  cMovie = rb_define_class_under(mQuicktime, "Movie", rb_cObject);
+  VALUE mQuickTime;
+  mQuickTime = rb_define_module("QuickTime");
+  cMovie = rb_define_class_under(mQuickTime, "Movie", rb_cObject);
   rb_define_alloc_func(cMovie, movie_new);
   rb_define_method(cMovie, "load_from_file", movie_load_from_file, 1);
   rb_define_method(cMovie, "load_empty", movie_load_empty, 0);

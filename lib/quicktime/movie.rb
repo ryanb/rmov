@@ -1,4 +1,4 @@
-module Quicktime
+module QuickTime
   # see ext/movie.c for additional methods
   class Movie
     # Opens a movie at filepath.

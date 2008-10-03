@@ -7,6 +7,6 @@ require 'quicktime/track'
 require 'quicktime/exporter'
 
 
-# RMov is made up of several parts. To start, see Quicktime::Movie.
-module Quicktime
+# RMov is made up of several parts. To start, see QuickTime::Movie.
+module QuickTime
 end

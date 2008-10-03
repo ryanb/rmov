@@ -1,17 +1,17 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
-describe Quicktime::Movie do
+describe QuickTime::Movie do
   it "should raise an exception when attempting to open a nonexisting file" do
-    lambda { Quicktime::Movie.open('foo.mov') }.should raise_error(Quicktime::Error)
+    lambda { QuickTime::Movie.open('foo.mov') }.should raise_error(QuickTime::Error)
   end
   
   it "should raise an exception when attempting to open a non movie file" do
-    lambda { Quicktime::Movie.open(__FILE__) }.should raise_error(Quicktime::Error)
+    lambda { QuickTime::Movie.open(__FILE__) }.should raise_error(QuickTime::Error)
   end
   
   describe "example.mov" do
     before(:each) do
-      @movie = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      @movie = QuickTime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
     end
     
     it "duration should be 3.1 seconds" do
@@ -31,7 +31,7 @@ describe Quicktime::Movie do
     end
     
     it "should have 2 tracks" do
-      @movie.tracks.map { |t| t.class }.should == [Quicktime::Track, Quicktime::Track]
+      @movie.tracks.map { |t| t.class }.should == [QuickTime::Track, QuickTime::Track]
       @movie.tracks.map { |t| t.id }.should == [1, 2]
     end
     
@@ -43,7 +43,7 @@ describe Quicktime::Movie do
       @movie.export(path) { |p| progress = p }
       progress.should == 1.0
       
-      exported_movie = Quicktime::Movie.open(path)
+      exported_movie = QuickTime::Movie.open(path)
       exported_movie.duration.should == @movie.duration
       exported_movie.tracks.size == @movie.tracks.size
     end
@@ -57,19 +57,19 @@ describe Quicktime::Movie do
     end
     
     it "composite should add another movie's tracks at a given location" do
-      m2 = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      m2 = QuickTime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
       @movie.composite_movie(m2, 2)
       @movie.duration.should == 5.1
     end
     
     it "insert should insert another movie's tracks at a given location" do
-      m2 = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      m2 = QuickTime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
       @movie.insert_movie(m2, 2)
       @movie.duration.should == 6.2
     end
     
     it "append_movie should insert movie at the end" do
-      m2 = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      m2 = QuickTime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
       @movie.append_movie(m2)
       @movie.duration.should == 6.2
     end
@@ -93,7 +93,7 @@ describe Quicktime::Movie do
     
     it "should have an exporter with this movie" do
       exporter = @movie.exporter
-      exporter.should be_kind_of(Quicktime::Exporter)
+      exporter.should be_kind_of(QuickTime::Exporter)
       exporter.movie.should == @movie
     end
     
@@ -113,7 +113,7 @@ describe Quicktime::Movie do
       path = File.dirname(__FILE__) + '/../output/flattened_example.mov'
       File.delete(path) rescue nil
       @movie.flatten(path)
-      mov = Quicktime::Movie.open(path)
+      mov = QuickTime::Movie.open(path)
       mov.duration.should == 3.1
     end
     
@@ -135,7 +135,7 @@ describe Quicktime::Movie do
   
   describe "empty movie" do
     before(:each) do
-      @movie = Quicktime::Movie.empty
+      @movie = QuickTime::Movie.empty
     end
     
     it "should have 0 duration" do
@@ -143,14 +143,14 @@ describe Quicktime::Movie do
     end
     
     it "should be able to append an existing movie" do
-      m2 = Quicktime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
+      m2 = QuickTime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
       @movie.append_movie(m2)
       @movie.duration.should == 3.1
     end
     
     it "should raise MovieAlreadyLoaded exception when attempting to load it again" do
-      lambda { @movie.load_empty }.should raise_error(Quicktime::Error)
-      lambda { @movie.load_from_file('example.mov') }.should raise_error(Quicktime::Error)
+      lambda { @movie.load_empty }.should raise_error(QuickTime::Error)
+      lambda { @movie.load_from_file('example.mov') }.should raise_error(QuickTime::Error)
     end
   end
 end

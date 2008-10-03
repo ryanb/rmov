@@ -1,4 +1,4 @@
-module Quicktime
+module QuickTime
   # see ext/exporter.c for additional methods
   class Exporter
     attr_reader :movie
