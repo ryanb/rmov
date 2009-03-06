@@ -17,6 +17,8 @@ OSErr movie_progress_proc(Movie movie, short message, short operation, Fixed per
 
 struct RMovie {
   Movie movie;
+  short resId;
+  char *filepath;
 };
 
 

@@ -111,10 +111,26 @@ describe QuickTime::Movie do
     
     it "flatten should save movie into file" do
       path = File.dirname(__FILE__) + '/../output/flattened_example.mov'
-      File.delete(path) rescue nil
+      File.delete(path) if File.exist?(path)
       @movie.flatten(path)
       mov = QuickTime::Movie.open(path)
       mov.duration.should == 3.1
+    end
+    
+    it "save should update movie in current file" do
+      path = File.dirname(__FILE__) + '/../output/saved_example.mov'
+      File.delete(path) if File.exist?(path)
+      @movie.flatten(path)
+      mov = QuickTime::Movie.open(path)
+      mov.audio_tracks.each { |t| t.delete } # delete track to demonstrate change
+      mov.save
+      mov2 = QuickTime::Movie.open(path)
+      mov2.audio_tracks.should be_empty
+    end
+    
+    it "save should raise exception when saving new movie without filepath" do
+      mov = QuickTime::Movie.empty
+      lambda { mov.save }.should raise_error
     end
     
     it "export_pict should output a pict file at a given duration" do

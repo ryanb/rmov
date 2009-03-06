@@ -64,27 +64,29 @@ static VALUE movie_load_from_file(VALUE obj, VALUE filepath)
   } else {
     OSErr err;
     FSSpec fs;
-    short frefnum = -1;
-    short movie_resid = 0;
+    short resRefNum = -1;
+    short resId = 0;
     Movie *movie = ALLOC(Movie);
     
     err = NativePathNameToFSSpec(RSTRING(filepath)->ptr, &fs, 0);
     if (err != 0)
       rb_raise(eQuickTime, "Error %d occurred while reading file at %s", err, RSTRING(filepath)->ptr);
     
-    err = OpenMovieFile(&fs, &frefnum, fsRdPerm);
+    err = OpenMovieFile(&fs, &resRefNum, fsRdPerm);
     if (err != 0)
       rb_raise(eQuickTime, "Error %d occurred while opening movie at %s", err, RSTRING(filepath)->ptr);
     
-    err = NewMovieFromFile(movie, frefnum, &movie_resid, 0, newMovieActive, 0);
+    err = NewMovieFromFile(movie, resRefNum, &resId, 0, newMovieActive, 0);
     if (err != 0)
       rb_raise(eQuickTime, "Error %d occurred while loading movie at %s", err, RSTRING(filepath)->ptr);
     
-    err = CloseMovieFile(frefnum);
+    err = CloseMovieFile(resRefNum);
     if (err != 0)
       rb_raise(eQuickTime, "Error %d occurred while closing movie file at %s", err, RSTRING(filepath)->ptr);
     
     RMOVIE(obj)->movie = *movie;
+    RMOVIE(obj)->filepath = RSTRING(filepath)->ptr;
+    RMOVIE(obj)->resId = resId;
     
     return obj;
   }
@@ -345,6 +347,41 @@ static VALUE movie_flatten(VALUE obj, VALUE filepath)
   return new_movie_obj;
 }
 
+
+/*
+  call-seq: save
+  
+  Saves the movie to the current file.
+*/
+static VALUE movie_save(VALUE obj)
+{
+  OSErr err;
+  FSSpec fs;
+  short resRefNum = -1;
+  
+  if (!RMOVIE(obj)->filepath || !RMOVIE(obj)->resId) {
+    rb_raise(eQuickTime, "Unable to save movie because it does not have an associated file.");
+  } else {
+    err = NativePathNameToFSSpec(RMOVIE(obj)->filepath, &fs, 0);
+    if (err != 0)
+      rb_raise(eQuickTime, "Error %d occurred while reading file at %s", err, RMOVIE(obj)->filepath);
+    
+    err = OpenMovieFile(&fs, &resRefNum, fsWrPerm);
+    if (err != 0)
+      rb_raise(eQuickTime, "Error %d occurred while opening movie at %s", err, RMOVIE(obj)->filepath);
+    
+    err = UpdateMovieResource(MOVIE(obj), resRefNum, RMOVIE(obj)->resId, 0);
+    if (err != 0)
+      rb_raise(eQuickTime, "Error %d occurred while saving movie file", err);
+    
+    err = CloseMovieFile(resRefNum);
+    if (err != 0)
+      rb_raise(eQuickTime, "Error %d occurred while closing movie file at %s", err, RMOVIE(obj)->filepath);
+    
+    return Qnil;
+  }
+}
+
 /*
   call-seq: export_image_type(filepath, time, ostype)
   
@@ -454,4 +491,5 @@ void Init_quicktime_movie()
   rb_define_method(cMovie, "poster_time", movie_get_poster_time, 0);
   rb_define_method(cMovie, "poster_time=", movie_set_poster_time, 1);
   rb_define_method(cMovie, "new_track", movie_new_track, 2);
+  rb_define_method(cMovie, "save", movie_save, 0);
 }
