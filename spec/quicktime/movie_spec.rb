@@ -153,6 +153,15 @@ describe QuickTime::Movie do
       @movie.poster_time = 2.1
       @movie.poster_time.should == 2.1
     end
+    
+    it "should overlay 2nd movie with transparency" do
+      m2 = QuickTime::Movie.open(File.dirname(__FILE__) + '/../fixtures/dot.png')
+      @movie.composite_movie(m2, 0)
+      @movie.video_tracks.last.enable_alpha
+      File.delete(File.dirname(__FILE__) + '/../output/transparent.mov') rescue nil
+      @movie.flatten(File.dirname(__FILE__) + '/../output/transparent.mov')
+      # this test needs to be checked manually by looking at the output movie
+    end
   end
   
   describe "empty movie" do

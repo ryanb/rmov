@@ -232,6 +232,20 @@ static VALUE track_new_text_media(VALUE obj)
   return obj;
 }
 
+/*
+  call-seq: enable_alpha
+  
+  Enable the straight alpha graphic mode for this track.
+  
+  This is best used on an overlayed video track which includes some
+  alpha transparency (such as in a PNG image).
+*/
+static VALUE track_enable_alpha(VALUE obj)
+{
+  MediaSetGraphicsMode(GetMediaHandler(TRACK_MEDIA(obj)), graphicsModeStraightAlpha, 0);
+  return obj;
+}
+
 void Init_quicktime_track()
 {
   VALUE mQuickTime;
@@ -255,4 +269,5 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "new_video_media", track_new_video_media, 0);
   rb_define_method(cTrack, "new_audio_media", track_new_audio_media, 0);
   rb_define_method(cTrack, "new_text_media", track_new_text_media, 0);
+  rb_define_method(cTrack, "enable_alpha", track_enable_alpha, 0);
 }
