@@ -55,6 +55,12 @@ describe QuickTime::Track do
         @track.width.should == 30
         @track.height.should == 25
       end
+    
+      it "should be able to move (translate) position of track" do
+        @track.translate(10, 20)
+        @track.bounds[:left].should == 10
+        @track.bounds[:top].should == 20
+      end
     end
     
     describe "audio track" do

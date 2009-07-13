@@ -263,6 +263,22 @@ static VALUE track_scale(VALUE obj, VALUE width, VALUE height)
 }
 
 /*
+  call-seq: translate
+  
+  Offset a track's position by x and y values respectively.
+  
+  Values should be in pixels.
+*/
+static VALUE track_translate(VALUE obj, VALUE x, VALUE y)
+{
+  MatrixRecord matrix;
+  GetTrackMatrix(TRACK(obj), &matrix);
+  TranslateMatrix(&matrix, FloatToFixed(NUM2DBL(x)), FloatToFixed(NUM2DBL(y)));
+  SetTrackMatrix(TRACK(obj), &matrix);
+  return obj;
+}
+
+/*
   call-seq: bounds() -> bounds_hash
   
   Returns a hash of boundaries. The hash contains four keys: :left, :top, 
@@ -308,5 +324,6 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "new_text_media", track_new_text_media, 0);
   rb_define_method(cTrack, "enable_alpha", track_enable_alpha, 0);
   rb_define_method(cTrack, "scale", track_scale, 2);
+  rb_define_method(cTrack, "translate", track_translate, 2);
   rb_define_method(cTrack, "bounds", track_bounds, 0);
 }
