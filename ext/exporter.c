@@ -93,7 +93,7 @@ static VALUE exporter_open_settings_dialog(VALUE obj)
   // Bring this process to the front
   err = TransformProcessType(&current_process, kProcessTransformToForegroundApplication);
   if (err != noErr) {
-    rb_raise(eQuickTime, "Error %d occurred while brining this application to the forground.", err);
+    rb_raise(eQuickTime, "Error %d occurred while bringing this application to the forground.", err);
   }
   SetFrontProcess(&current_process);
   
