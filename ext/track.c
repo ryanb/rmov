@@ -191,7 +191,7 @@ static VALUE track_set_offset(VALUE obj, VALUE seconds)
 }
 
 /*
-  call-seq: new_video_media
+  call-seq: new_video_media()
   
   Creates a new video media for this track.
   
@@ -205,7 +205,7 @@ static VALUE track_new_video_media(VALUE obj)
 }
 
 /*
-  call-seq: new_audio_media
+  call-seq: new_audio_media()
   
   Creates a new audio media for this track.
   
@@ -219,7 +219,7 @@ static VALUE track_new_audio_media(VALUE obj)
 }
 
 /*
-  call-seq: new_text_media
+  call-seq: new_text_media()
   
   Creates a new text media for this track.
   
@@ -233,7 +233,7 @@ static VALUE track_new_text_media(VALUE obj)
 }
 
 /*
-  call-seq: enable_alpha
+  call-seq: enable_alpha()
   
   Enable the straight alpha graphic mode for this track.
   
@@ -247,7 +247,7 @@ static VALUE track_enable_alpha(VALUE obj)
 }
 
 /*
-  call-seq: scale
+  call-seq: scale(width, height)
   
   Scale the track's size by width and height respectively.
   
@@ -263,7 +263,7 @@ static VALUE track_scale(VALUE obj, VALUE width, VALUE height)
 }
 
 /*
-  call-seq: translate
+  call-seq: translate(x, y)
   
   Offset a track's position by x and y values respectively.
   
@@ -299,6 +299,20 @@ static VALUE track_bounds(VALUE obj)
   return bounds_hash;
 }
 
+/*
+  call-seq: reset_transformations()
+  
+  Revert any transformations (scale, translate, rotate) performed on this track.
+*/
+static VALUE track_reset_transformations(VALUE obj)
+{
+  MatrixRecord matrix;
+  GetTrackMatrix(TRACK(obj), &matrix);
+  SetIdentityMatrix(&matrix);
+  SetTrackMatrix(TRACK(obj), &matrix);
+  return obj;
+}
+
 void Init_quicktime_track()
 {
   VALUE mQuickTime;
@@ -326,4 +340,5 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "scale", track_scale, 2);
   rb_define_method(cTrack, "translate", track_translate, 2);
   rb_define_method(cTrack, "bounds", track_bounds, 0);
+  rb_define_method(cTrack, "reset_transformations", track_reset_transformations, 0);
 }

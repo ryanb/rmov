@@ -61,6 +61,16 @@ describe QuickTime::Track do
         @track.bounds[:left].should == 10
         @track.bounds[:top].should == 20
       end
+    
+      it "should reset transformations" do
+        @track.scale(0.5, 0.5)
+        @track.translate(10, 20)
+        @track.reset_transformations
+        @track.bounds[:left].should == 0
+        @track.bounds[:top].should == 0
+        @track.bounds[:right].should == 60
+        @track.bounds[:bottom].should == 50
+      end
     end
     
     describe "audio track" do
