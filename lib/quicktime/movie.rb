@@ -98,5 +98,77 @@ module QuickTime
       end
       export_image_type(filepath, seconds, type)
     end
+    
+    # Reset selection to beginning
+    def deselect
+      select(0, 0)
+    end
+    
+    # Adds the tracks of given movie into called movie. Position will default to
+    # beginning of movie. Duration will default to length of given movie.
+    # 
+    # You can track the progress of this operation by passing a block to this 
+    # method. It will be called regularly during the process and pass the 
+    # percentage complete (0.0 to 1.0) as an argument to the block.
+    def composite_movie(movie, position = 0, duration = 0, &block)
+      select(position, duration)
+      add_into_selection(movie, &block)
+      deselect
+    end
+    
+    # Adds given movie to the end of movie which this method is called on.
+    # 
+    # You can track the progress of this operation by passing a block to this 
+    # method. It will be called regularly during the process and pass the 
+    # percentage complete (0.0 to 1.0) as an argument to the block.
+    def append_movie(movie, &block)
+      select(duration, 0)
+      insert_into_selection(movie, &block)
+      deselect
+    end
+    
+    # Inserts given movie into called movie. The position defaults to the beginning
+    # of the movie. If a duration is passed, that amount of the movie will be replaced.
+    # 
+    # You can track the progress of this operation by passing a block to this 
+    # method. It will be called regularly during the process and pass the 
+    # percentage complete (0.0 to 1.0) as an argument to the block.
+    def insert_movie(movie, position = 0, duration = 0, &block)
+      select(position, duration)
+      insert_into_selection(movie, &block)
+      deselect
+    end
+    
+    # Returns a new movie from the specified portion of called movie.
+    # 
+    # You can track the progress of this operation by passing a block to this 
+    # method. It will be called regularly during the process and pass the 
+    # percentage complete (0.0 to 1.0) as an argument to the block.
+    def clone_section(position = 0, duration = 0, &block)
+      select(position, duration)
+      movie = clone_selection(&block)
+      deselect
+      movie
+    end
+    
+    # Deletes the specified section on movie and returns a new movie
+    # with that content.
+    # 
+    # You can track the progress of this operation by passing a block to this 
+    # method. It will be called regularly during the process and pass the 
+    # percentage complete (0.0 to 1.0) as an argument to the block.
+    def clip_section(position = 0, duration = 0, &block)
+      select(position, duration)
+      movie = clip_selection(&block)
+      deselect
+      movie
+    end
+    
+    # Deletes the specified section on movie.
+    def delete_section(position = 0, duration = 0)
+      select(position, duration)
+      delete_selection
+      deselect
+    end
   end
 end
