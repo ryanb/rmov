@@ -246,6 +246,43 @@ static VALUE track_enable_alpha(VALUE obj)
   return obj;
 }
 
+/*
+  call-seq: scale
+  
+  Scale the track's size by width and height respectively.
+  
+  The value passed is a relative float where "1" is the current size.
+*/
+static VALUE track_scale(VALUE obj, VALUE width, VALUE height)
+{
+  MatrixRecord matrix;
+  GetTrackMatrix(TRACK(obj), &matrix);
+  ScaleMatrix(&matrix, FloatToFixed(NUM2DBL(width)), FloatToFixed(NUM2DBL(height)), 0, 0);
+  SetTrackMatrix(TRACK(obj), &matrix);
+  return obj;
+}
+
+/*
+  call-seq: bounds() -> bounds_hash
+  
+  Returns a hash of boundaries. The hash contains four keys: :left, :top, 
+  :right, :bottom. Each holds an integer representing the pixel value.
+*/
+static VALUE track_bounds(VALUE obj)
+{
+  VALUE bounds_hash = rb_hash_new();
+  RgnHandle region;
+  Rect bounds;
+  region = GetTrackDisplayBoundsRgn(TRACK(obj));
+  GetRegionBounds(region, &bounds);
+  DisposeRgn(region);
+  rb_hash_aset(bounds_hash, ID2SYM(rb_intern("left")), INT2NUM(bounds.left));
+  rb_hash_aset(bounds_hash, ID2SYM(rb_intern("top")), INT2NUM(bounds.top));
+  rb_hash_aset(bounds_hash, ID2SYM(rb_intern("right")), INT2NUM(bounds.right));
+  rb_hash_aset(bounds_hash, ID2SYM(rb_intern("bottom")), INT2NUM(bounds.bottom));
+  return bounds_hash;
+}
+
 void Init_quicktime_track()
 {
   VALUE mQuickTime;
@@ -270,4 +307,6 @@ void Init_quicktime_track()
   rb_define_method(cTrack, "new_audio_media", track_new_audio_media, 0);
   rb_define_method(cTrack, "new_text_media", track_new_text_media, 0);
   rb_define_method(cTrack, "enable_alpha", track_enable_alpha, 0);
+  rb_define_method(cTrack, "scale", track_scale, 2);
+  rb_define_method(cTrack, "bounds", track_bounds, 0);
 }

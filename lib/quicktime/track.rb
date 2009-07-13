@@ -26,5 +26,15 @@ module QuickTime
     def text?
       media_type == :text
     end
+    
+    # Returns the bounding width of this track in number of pixels.
+    def width
+      bounds[:right] - bounds[:left]
+    end
+    
+    # Returns the bounding height of this track in number of pixels.
+    def height
+      bounds[:bottom] - bounds[:top]
+    end
   end
 end

@@ -6,7 +6,7 @@ describe QuickTime::Track do
       @movie = QuickTime::Movie.open(File.dirname(__FILE__) + '/../fixtures/example.mov')
     end
   
-    describe "example.mov video track" do
+    describe "video track" do
       before(:each) do
         @track = @movie.video_tracks.first
       end
@@ -49,9 +49,15 @@ describe QuickTime::Track do
         @track.offset = 2.5
         @track.offset.should == 2.5
       end
+    
+      it "should be able to scale size of track" do
+        @track.scale(0.5, 0.5)
+        @track.width.should == 30
+        @track.height.should == 25
+      end
     end
-  
-    describe "example.mov audio track" do
+    
+    describe "audio track" do
       before(:each) do
         @track = @movie.audio_tracks.first
       end
