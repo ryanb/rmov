@@ -71,6 +71,12 @@ describe QuickTime::Track do
         @track.bounds[:right].should == 60
         @track.bounds[:bottom].should == 50
       end
+    
+      it "should rotate track" do
+        @track.rotate(90)
+        @track.width.should == 50
+        @track.height.should == 60
+      end
     end
     
     describe "audio track" do
