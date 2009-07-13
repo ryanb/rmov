@@ -17,7 +17,9 @@ And then load it in your project:
 
 == Usage
 
-Use this gem to open QuickTime movies and edit them to your liking.
+There are many methods for editing, compositing, and exporting movies. Here are some examples.
+
+=== Editing
 
   movie1 = QuickTime::Movie.open("path/to/movie.mov")
   movie2 = QuickTime::Movie.open("path/to/another_movie.mov")
@@ -32,12 +34,33 @@ Use this gem to open QuickTime movies and edit them to your liking.
   # You can insert that part back into the movie at 8 seconds in
   movie1.insert_movie(movie3, 8)
 
-Now you can export the movie. Usually this is done through a user 
-interface the first time around. The settings can then be saved to
-a file. After that you can load these settings without interfering
-the user with the dialog again.
+=== Compositing
 
-  exporter = movie1.exporter
+  movie = QuickTime::Movie.open("path/to/movie.mov")
+  watermark_movie = QuickTime::Movie.open("path/to/watermark.png")
+  
+  # add watermark track onto the entire length of the movie
+  movie.composite_movie(watermark_movie, 0, movie.duration)
+  
+  # grab the watermark track
+  watermark = movie.video_tracks.last
+  
+  # enable the alpha transparency of the png
+  watermark.enable_alpha
+  
+  # make the watermark half the size
+  watermark.scale(0.5, 0.5)
+  
+  # offset into lower left corner
+  watermark.translate(10, movie.height - watermark.height - 10)
+
+=== Exporting
+
+Usually exporting is done through a user interface the first time.
+The settings can then be saved to a file. After that you can load
+these settings without interfering the user with the dialog again.
+
+  exporter = movie.exporter
   
   # if we already have saved the settings, load those
   if File.exist? "settings.st"
@@ -56,7 +79,10 @@ the user with the dialog again.
     puts "#{percent}% complete"
   end
 
-See QuickTime::Movie in the RDoc for more information.
+
+== Documentation
+
+See QuickTime::Movie and QuickTime::Track in the RDoc for more information.
 
 http://rmov.rubyforge.org
 
