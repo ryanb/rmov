@@ -176,7 +176,7 @@ static VALUE exporter_save_settings(VALUE obj, VALUE filepath)
   if (!file) {
     rb_raise(eQuickTime, "Unable to open file for saving at %s.", RSTRING(filepath)->ptr);
   }
-  fwrite(&settings, GetHandleSize((Handle)settings), 1, file);
+  fwrite(*settings, GetHandleSize((Handle)settings), 1, file);
   fclose(file);
   
   return Qnil;
