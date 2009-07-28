@@ -13,6 +13,7 @@ LICENSE
 Manifest
 Rakefile
 README.rdoc
+spec/fixtures/dot.png
 spec/fixtures/settings.st
 spec/quicktime/exporter_spec.rb
 spec/quicktime/movie_spec.rb

@@ -1,8 +1,24 @@
+0.1.5 (July 28, 2009)
+
+* fixing saving export settings - closes #8
+
+* improving how movie selection process happens providing more flexibility - closes #4 and #5
+
+* adding enable_alpha method to enable alpha transparency for compositing - closes #3
+
+* adding track transformations (rotation, scaling, and translation) - closes #1 and #2
+
+* adding movie.save method to save a movie in place
+
+* supporting .pict extension when exporting frame
+
+
 0.1.4 (October 3rd, 2008)
 
 * adding support for several export_image formats (PNG, JPEG, TIFF, TGA, BMP, PSD)
 
 * adding movie.export_image as a generic way to export a frame to multiple formats
+
 
 0.1.3 (October 3rd, 2008)
 
@@ -11,6 +27,7 @@
 * adding movie.new_video_track and movie.new_audio_track methods for creating new tracks
 
 * changing Quicktime module name to QuickTime to match proper casing
+
 
 0.1.2 (October 3rd, 2008)
 
@@ -22,11 +39,13 @@
 
 * QuickTime settings dialog comes into the forground properly
 
+
 0.1.1 (October 3rd, 2008)
 
 * RubyGems 1.3 compatibility (updated Echoe)
 
 * fixing inline RDocs so call sequence is handled properly
+
 
 0.1.0 (October 2nd, 2008)
 
