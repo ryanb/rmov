@@ -15,6 +15,15 @@ And then load it in your project:
   require 'rmov'
 
 
+== 32 vs 64 Bit
+
+Snow Leopard introduces a push towards 64 bit, and by default Ruby will run in 64 bit. Unfortunately the QuickTime C API will not be moving to 64 bit (see http://arstechnica.com/apple/reviews/2009/08/mac-os-x-10-6.ars/6 ). Therefore RMov 0.1.6 and later will always be installed under 32 bit.
+
+This means You will not be able to use this gem while running the default 64 bit Ruby. Instead you will need to run Ruby in 32 bit mode. You can do so with this command.
+
+  arch -i386 ruby path/to/script.rb
+
+
 == Usage
 
 There are many methods for editing, compositing, and exporting movies. Here are some examples.
